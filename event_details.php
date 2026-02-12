@@ -100,7 +100,7 @@
         </ul>
 
         <p>
-            <?php echo nl2br(htmlspecialchars($event['description_evenement'] ?? '')); ?>
+            <?php echo nl2br(htmlspecialchars($event['description_evenement'])); ?>
         </p>
 
     </section>

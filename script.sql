@@ -56,6 +56,7 @@ CREATE TABLE ARTICLE(
                         nom_article VARCHAR(100) NOT NULL,
                         stock_article INT NOT NULL,
                         image_article VARCHAR(500) NOT NULL,
+                        categorie_article VARCHAR(100) NOT NULL DEFAULT 'Non défini',
                         reduction_article BIT NOT NULL DEFAULT 1,
                         prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
                         PRIMARY KEY(id_article)

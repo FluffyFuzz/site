@@ -2,7 +2,7 @@
 
 class DB
 {
-    private $host = 'db';
+    private $host = 'localhost';
     private $port = '3306';
     private $db = 'sae'; // <- ici
     private $db_user = 'etu'; // <- ici
