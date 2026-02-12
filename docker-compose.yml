@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mariadb:10.11
+    container_name: sae-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: sae
+      MYSQL_USER: etu
+      MYSQL_PASSWORD: motdepasse
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql:ro
+
+  web:
+    image: php:8.2-apache
+    container_name: sae-web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    command: >
+      sh -c "echo 'output_buffering = On' > /usr/local/etc/php/conf.d/output.ini 
+      && docker-php-ext-install mysqli pdo pdo_mysql 
+      && apache2-foreground"
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin
+    container_name: sae-pma
+    ports:
+      - "8081:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=etu
+      - PMA_PASSWORD=motdepasse
+    depends_on:
+      - db
