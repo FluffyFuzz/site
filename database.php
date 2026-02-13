@@ -6,7 +6,7 @@ class DB
     private $port = '3306';
     private $db = 'sae'; // <- ici
     private $db_user = 'etu'; // <- ici
-    private $db_pass = 'motdepassew'; // <- ici
+    private $db_pass = 'motdepasse'; // <- ici
 
     public function connect()
     {
