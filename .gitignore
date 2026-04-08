@@ -1,3 +1,6 @@
 .idea
 .DS_Store
 ./api/files/
+docker-compose.yml
+script.sql
+./vendor
