@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'DB.php';
 
@@ -12,7 +13,7 @@ if (!isset($_SESSION['userid'])) {
 
 // URL iCal du dossier "Dpt INFO" dans ADE (une seule URL pour tous les groupes)
 // Obtenir : planning.univ-lemans.fr/direct/ → sélectionner "Dpt INFO" → icône iCal
-define('ADE_ICS_URL',   'https://planning.univ-lemans.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=71&projectId=8&calType=ical&nbWeeks=44');
+define('ADE_ICS_URL', 'https://planning.univ-lemans.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=71&projectId=8&calType=ical&nbWeeks=44');
 define('ADE_ICS_CACHE', '/tmp/adiil_agenda_dpt.ics');
 define('ADE_CACHE_TTL', 3600);  // 1 heure
 

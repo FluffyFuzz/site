@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     <?php
     require_once 'header.php';
     $isLoggedIn = isset($_SESSION["userid"]);
-?>
-    <?php if (isset($_SESSION['subscription_error'])): ?>
+    ?>
+    <?php if (isset($_SESSION['subscription_error'])) : ?>
         <p style="color:#c0392b; background:#fdecea; border:1px solid #c0392b; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
             <?= htmlspecialchars($_SESSION['subscription_error']) ?>
         </p>
@@ -82,13 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             <?php else :
                 @$a = $db->select("SELECT * FROM INSCRIPTION WHERE id_evenement = ? AND id_membre = ?;", "ii", [$_GET['id'], $_SESSION['userid']]);
                 $isSubscribed = !empty($a);
-                if($isSubscribed):?>
+                if ($isSubscribed) :?>
                     <form class="subscription" action="/event_unsubscribe.php" method="post">
                         <input type="hidden" name="eventid" value="<?php echo $eventid ?>">
                         <button type="submit" id="passed_subscription">Se désinscrire</button>
                     </form>
-                <?php
-                else:?>
+                    <?php
+                else :?>
                     <form class="subscription" action="event_subscription.php" method="post">
                         <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
                         <button type="submit">Inscription</a></button>
@@ -129,12 +129,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
                 "ii",
                 [$_SESSION["userid"], $eventid]
             );
-            foreach($medias as $img):
+            foreach ($medias as $img) :
                 $url = '/api/files/' . trim($img['url_media']);
                 $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
-                if (in_array($ext, ['mp4','webm','ogg','mov'])): ?>
+                if (in_array($ext, ['mp4','webm','ogg','mov'])) : ?>
                     <video src="<?= $url ?>" controls style="width:100%; border-radius:8px;"></video>
-                <?php else: ?>
+                <?php else : ?>
                     <img src="<?= $url ?>" alt="Image personnelle de l'événement">
                 <?php endif;
             endforeach;?>

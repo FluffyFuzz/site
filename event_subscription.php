@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     require_once 'database.php';
     $db = new DB();
-    if(isset($_POST["price"], $_POST["eventid"])){
+    if (isset($_POST["price"], $_POST["eventid"])) {
         $inscription_id = $db->query(
             "INSERT INTO `INSCRIPTION` (`id_membre`, `id_evenement`, `date_inscription`, `paiement_inscription`, `prix_inscription`)
             VALUES (?, ?, NOW(), 'WEB', ?);",
@@ -146,13 +146,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
 
             <h3>Total &nbsp : &nbsp <?= number_format($price, 2, ',', ' ') ?> €</h3>
-            <h3>Total après réductions &nbsp : &nbsp <?= number_format($price*$user_reduction, 2, ',', ' ') ?> €</h3>
+            <h3>Total après réductions &nbsp : &nbsp <?= number_format($price * $user_reduction, 2, ',', ' ') ?> €</h3>
                    
         </div>
 
         <div>
-            <?php if ($price * $user_reduction == 0): ?>
-
+            <?php if ($price * $user_reduction == 0) : ?>
             <h3>Événement gratuit</h3>
             <form method="POST" action="/event_subscription.php">
                 <input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
@@ -160,8 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="submit" id="finalise-order-button">Confirmer l'inscription</button>
             </form>
 
-            <?php else: ?>
-
+            <?php else : ?>
             <h3>Paiement</h3>
 
             <label for="mode_paiement">Mode de Paiement :</label>

@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'DB.php';
 require_once 'tools.php';
@@ -42,7 +43,8 @@ function get_messages(): void
          JOIN MEMBRE MB ON MB.id_membre = M.id_membre
          WHERE M.id_conversation = ? AND M.id_message > ?
          ORDER BY M.date_message ASC",
-        "ii", [$id_conversation, $after]
+        "ii",
+        [$id_conversation, $after]
     );
 
     foreach ($messages as &$msg) {
@@ -62,7 +64,8 @@ function post_message(): void
 
     $DB->query(
         "INSERT INTO MESSAGE (id_conversation, id_membre, contenu) VALUES (?, ?, ?)",
-        "iis", [$id_conv, $id_membre, $contenu]
+        "iis",
+        [$id_conv, $id_membre, $contenu]
     );
 
     http_response_code(201);

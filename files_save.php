@@ -36,9 +36,9 @@ function saveImage(): string | null
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($_FILES['file']['tmp_name']);
         $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
-        if (!in_array($mimeType, $allowedTypes)) {
-            return null;
-        }
+    if (!in_array($mimeType, $allowedTypes)) {
+        return null;
+    }
 
         // On s'assure que l'extension du fichier ne causerait pas de problèmes
         return saveFile();
