@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\File;
 use model\Item;
@@ -10,7 +11,7 @@ require_once 'models/Item.php';
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_boutique');
+Tools::checkPermission('p_boutique');
 
 $methode = $_SERVER['REQUEST_METHOD'];
 
@@ -22,7 +23,7 @@ switch ($methode) {
             create_item();
         break;
     case 'PUT':                      # UPDATE (données seulement)
-        if (tools::methodAccepted('application/json')) {
+        if (Tools::methodAccepted('application/json')) {
             update_item();
         }
         break;
@@ -39,10 +40,9 @@ switch ($methode) {
 }
 
 
-function get_items() : void
+function get_items(): void
 {
-    if (isset($_GET['id']))
-    {
+    if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
         $item = Item::getInstance($id);
 
@@ -51,7 +51,6 @@ function get_items() : void
             echo json_encode(['error' => 'Item not found']);
             return;
         }
-
     } else {
         $item = Item::bulkFetch();
     }
@@ -60,21 +59,19 @@ function get_items() : void
     echo json_encode($item);
 }
 
-function create_item() : void
+function create_item(): void
 {
-   $item = Item::create(
-       "Nouvel article", 1, 0, true, 1.99, null, "Non défini");
+    $item = Item::create("Nouvel article", 1, 0, true, 1.99, null, "Non défini");
 
-   http_response_code(201);
-   echo $item;
+    http_response_code(201);
+    echo $item;
 }
 
-function update_item() : void
+function update_item(): void
 {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!isset($_GET['id'], $data['name'], $data['xp'], $data['stocks'], $data['reduction'], $data['price'], $data['categorie']))
-    {
+    if (!isset($_GET['id'], $data['name'], $data['xp'], $data['stocks'], $data['reduction'], $data['price'], $data['categorie'])) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing parameters']);
         return;
@@ -90,8 +87,7 @@ function update_item() : void
 
     $item = Item::getInstance($id);
 
-    if (!$item)
-    {
+    if (!$item) {
         http_response_code(404);
         echo json_encode(['error' => 'Item not found']);
         return;
@@ -102,10 +98,9 @@ function update_item() : void
     echo $item;
 }
 
-function update_image() : void
+function update_image(): void
 {
-    if (!isset($_GET['id']))
-    {
+    if (!isset($_GET['id'])) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing parameters']);
         return;
@@ -113,8 +108,7 @@ function update_image() : void
 
     $item = Item::getInstance(filter::int($_GET['id']));
 
-    if (!$item)
-    {
+    if (!$item) {
         http_response_code(404);
         echo json_encode(['error' => 'Item not found']);
         return;
@@ -122,8 +116,7 @@ function update_image() : void
 
     $imageName = File::saveImage();
 
-    if (!$imageName)
-    {
+    if (!$imageName) {
         http_response_code(400);
         echo json_encode(['error' => 'Image could not be processed']);
         return;
@@ -138,10 +131,9 @@ function update_image() : void
 }
 
 
-function delete_item() : void
+function delete_item(): void
 {
-    if (!isset($_GET['id']))
-    {
+    if (!isset($_GET['id'])) {
         http_response_code(400);
         echo json_encode(['error' => 'Missing parameters']);
         return;
@@ -150,8 +142,7 @@ function delete_item() : void
     $id = filter::int($_GET['id']);
     $item = Item::getInstance($id);
 
-    if (!$item)
-    {
+    if (!$item) {
         http_response_code(404);
         echo json_encode(['error' => 'Item not found']);
         return;

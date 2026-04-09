@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\File;
 use model\Member;
@@ -45,7 +46,8 @@ switch ($methode) {
         break;
 }
 
-function get_users() : void {
+function get_users(): void
+{
     if (isset($_GET['id'])) {
         // Si un ID est précisé, on renvoie les infos de l'utilisateur correspondant avec ses rôles
         $id = filter::int($_GET['id']);
@@ -54,13 +56,11 @@ function get_users() : void {
 
         if ($data) {
             $data = $data->toJsonWithRoles();
-
         } else {
             http_response_code(404);
             echo json_encode(["message" => "User not found"]);
             return;
         }
-
     } else {
         // Sinon, on renvoie la liste de tous les utilisateurs. On va juste préciser si ils ont des rôles ou non
         $data = Member::bulkFetch();
@@ -70,7 +70,7 @@ function get_users() : void {
     echo json_encode($data);
 }
 
-function create_user() : void
+function create_user(): void
 {
     $user = Member::create(
         "Nom",
@@ -84,7 +84,7 @@ function create_user() : void
     echo json_encode($user->toJsonWithRoles());
 }
 
-function update_user() : void
+function update_user(): void
 {
 
     $data = json_decode(file_get_contents('php://input'), true);
@@ -96,7 +96,7 @@ function update_user() : void
     }
 
     $id = filter::int($_GET['id']);
-    $name = filter::string($data['name'],maxLenght: 100);
+    $name = filter::string($data['name'], maxLenght: 100);
     $surname =  filter::string($data['firstname'], maxLenght: 100);
     $email = filter::email($data['email'], maxLenght: 100);
     $tp = filter::string($data['tp'], maxLenght: 3);
@@ -109,8 +109,6 @@ function update_user() : void
 
         http_response_code(200);
         echo json_encode($user->toJsonWithRoles());
-
-
     } else {
         http_response_code(404);
         echo json_encode(["message" => "User not found"]);
@@ -154,7 +152,7 @@ function update_image(): void
 }
 
 
-function delete_user() :void
+function delete_user(): void
 {
     if (!isset($_GET['id'])) {
         http_response_code(400);
@@ -177,5 +175,3 @@ function delete_user() :void
     http_response_code(200);
     echo json_encode(["message" => "User deleted"]);
 }
-
-

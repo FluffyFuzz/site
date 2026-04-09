@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'DB.php';
 require_once 'tools.php';
@@ -55,8 +56,14 @@ function post_message(): void
     $id_membre = (int) $_SESSION['userid'];
 
     $DB->query(
+<<<<<<< HEAD
         "INSERT INTO MESSAGE_ADMIN (id_membre, contenu) VALUES (?, ?)",
         "is", [$id_membre, $contenu]
+=======
+        "INSERT INTO MESSAGE (id_conversation, id_membre, contenu) VALUES (?, ?, ?)",
+        "iis",
+        [$id_conv, $id_membre, $contenu]
+>>>>>>> f5a9cdd35425d5a406409e78ced460e74d2c2bf8
     );
 
     http_response_code(201);

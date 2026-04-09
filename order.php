@@ -36,7 +36,7 @@ require_once 'cart_class.php';
 $db = new DB();
 
 // Initialisation du panier
-$cart = new cart($db);
+$cart = new Cart($db);
 
 
 
@@ -71,9 +71,9 @@ $products = $db->select($query, $types, $product_ids);
 $cart_items = [];
 $total_xp = 0;
 foreach ($products as $product) {
-    if(
+    if (
         $product['stock_article'] > 0 && $_SESSION['cart'][$product['id_article']] > $product['stock_article']
-    ){
+    ) {
         $cart[$product['id_article']] = $product['stock_article'];
     }
     $qte = $cart[$product['id_article']];
@@ -87,7 +87,6 @@ foreach ($products as $product) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     if (isset($_POST['mode_paiement']) && !empty($_POST['mode_paiement'])) {
         $mode_paiement = $_POST['mode_paiement'];
 
@@ -100,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             );
         }
         $_SESSION['cart'] = [];
-        
+
         $_SESSION['message'] = "Commande réalisée avec succès !";
         $_SESSION['message_type'] = "success";
 
@@ -146,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($cart_items as $product_id => $item): ?>
+                <?php foreach ($cart_items as $product_id => $item) : ?>
                     <tr>
                         <td><?php echo htmlspecialchars($item['nom_article']); ?></td>
                         <td><?php echo $item['quantite']; ?></td>
@@ -170,25 +169,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     );
 
                     //récupérer la réduction liée au grade
-                    if (!empty($adherant)) {
-                        $reductionGrade = floatval($adherant[0]["reduction_grade"] ?? 0);
-                        $user_reduction = 1 - ($reductionGrade / 100);
-                        $totalWithReduc = 0;
+            if (!empty($adherant)) {
+                $reductionGrade = floatval($adherant[0]["reduction_grade"] ?? 0);
+                $user_reduction = 1 - ($reductionGrade / 100);
+                $totalWithReduc = 0;
 
-                        // Calcule le total en tenant compte des réductions applicables
-                        foreach ($products as $product) {
-                            if (!empty($product['reduction_article'])) { // Vérifie si une réduction est applicable
-                                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']] * $user_reduction;
-                            } else {
-                                $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']];
-                            }
-                        }
-                        ?>
+                // Calcule le total en tenant compte des réductions applicables
+                foreach ($products as $product) {
+                    if (!empty($product['reduction_article'])) { // Vérifie si une réduction est applicable
+                        $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']] * $user_reduction;
+                    } else {
+                        $totalWithReduc += $product['prix_article'] * $_SESSION['cart'][$product['id_article']];
+                    }
+                }
+                ?>
                         
                         <h3>Total après réductions &nbsp : &nbsp <?= number_format($totalWithReduc, 2, ',', ' ') ?> €</h3>
                         
-                    <?php }
-                }?>
+            <?php }
+        }?>
     </div>
 
     <div>    

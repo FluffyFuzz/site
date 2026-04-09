@@ -9,9 +9,7 @@ require_once __DIR__ . '/BaseModel.php';
 
 class Role extends BaseModel implements JsonSerializable
 {
-    public static function create(string $name, bool $p_log, bool $p_boutique, bool $p_reunion, bool $p_utilisateur,
-                                  bool $p_grade, bool $p_role, bool $p_actualite, bool $p_evenement, bool $p_comptabilite,
-                                  bool $p_achat, bool $p_moderation) : Role
+    public static function create(string $name, bool $p_log, bool $p_boutique, bool $p_reunion, bool $p_utilisateur, bool $p_grade, bool $p_role, bool $p_actualite, bool $p_evenement, bool $p_comptabilite, bool $p_achat, bool $p_moderation): Role
     {
         $DB = new \DB();
 
@@ -22,16 +20,14 @@ class Role extends BaseModel implements JsonSerializable
     }
 
 
-    public function update(string $name, bool $p_log, bool $p_boutique, bool $p_reunion, bool $p_utilisateur,
-                           bool $p_grade, bool $p_role, bool $p_actualite, bool $p_evenement, bool $p_comptabilite,
-                           bool $p_achat, bool $p_moderation) : Role
+    public function update(string $name, bool $p_log, bool $p_boutique, bool $p_reunion, bool $p_utilisateur, bool $p_grade, bool $p_role, bool $p_actualite, bool $p_evenement, bool $p_comptabilite, bool $p_achat, bool $p_moderation): Role
     {
         $this->DB->query("UPDATE ROLE SET nom_role = ?, p_log_role = ?, p_boutique_role = ?, p_reunion_role = ?, p_utilisateur_role = ?, p_grade_role = ?, p_roles_role = ?, p_actualite_role = ?, p_evenements_role = ?, p_comptabilite_role = ?, p_achats_role = ?, p_moderation_role = ? WHERE id_role = ?", "siiiiiiiiiiii", [$name, $p_log, $p_boutique, $p_reunion, $p_utilisateur, $p_grade, $p_role, $p_actualite, $p_evenement, $p_comptabilite, $p_achat, $p_moderation, $this->id]);
 
         return $this;
     }
 
-    public function delete() : void
+    public function delete(): void
     {
         // Désassocie tous les membres de ce rôle
         // Puis supprime le rôle
@@ -70,7 +66,7 @@ class Role extends BaseModel implements JsonSerializable
         return $members;
     }
 
-    public function toJson() : array
+    public function toJson(): array
     {
         $data = $this->DB->select(
             "SELECT id_role, nom_role,
@@ -98,7 +94,7 @@ class Role extends BaseModel implements JsonSerializable
         return $result;
     }
 
-    public function addMember(Member $member) : void
+    public function addMember(Member $member): void
     {
         $this->DB->query("INSERT INTO ASSIGNATION (id_membre, id_role) VALUES (?, ?)", "ii", [$member->id, $this->id]);
     }

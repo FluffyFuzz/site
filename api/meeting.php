@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\File;
 use model\Meeting;
@@ -16,7 +17,7 @@ ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_reunion');
+Tools::checkPermission('p_reunion');
 
 $methode = $_SERVER['REQUEST_METHOD'];
 
@@ -36,7 +37,8 @@ switch ($methode) {
         break;
 }
 
-function get_meetings() : void {
+function get_meetings(): void
+{
     if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
         $meeting = Meeting::getInstance($id);
@@ -57,12 +59,11 @@ function get_meetings() : void {
 }
 
 
-function create_meeting() : void
+function create_meeting(): void
 {
     // TODO : Récupérer l'ID de membre grace au token PHP
 
     if (isset($_POST['date'])) {
-
         $date = filter::date($_POST['date']);
         $user = Member::getInstance(filter::int($_SESSION['userid']));
 
@@ -72,7 +73,7 @@ function create_meeting() : void
             $meeting = Meeting::create($date, $file, $user);
             http_response_code(201);
             echo json_encode($meeting);
-        } else if (!$file) {
+        } elseif (!$file) {
             http_response_code(500);
             echo json_encode(["message" => "Error while saving file"]);
         } else {
@@ -83,11 +84,10 @@ function create_meeting() : void
         http_response_code(400);
         echo json_encode(["message" => "Missing parameters"]);
     }
-
 }
 
 
-function delete_meeting() : void
+function delete_meeting(): void
 {
     if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
@@ -104,4 +104,3 @@ function delete_meeting() : void
         }
     }
 }
-

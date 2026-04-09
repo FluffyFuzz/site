@@ -145,17 +145,17 @@ class File implements JsonSerializable
     }
 
 
-    public function deleteFile() : bool
+    public function deleteFile(): bool
     {
-            if (file_exists('files/' . $this->fileName)) {
+        if (file_exists('files/' . $this->fileName)) {
                 unlink('files/' . $this->fileName);
                 return true;
-            }
+        }
 
             return false;
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->fileName;
     }

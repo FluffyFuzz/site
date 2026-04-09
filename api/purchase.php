@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once 'DB.php';
@@ -10,7 +11,7 @@ ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_achat');
+Tools::checkPermission('p_achat');
 
 $DB = new DB();
 
@@ -29,7 +30,8 @@ switch ($methode) {
         break;
 }
 
-function get_purchase() : void {
+function get_purchase(): void
+{
     $db = new DB();
     $data = $db->select("SELECT * FROM HISTORIQUE_COMPLET ORDER BY date_transaction DESC");
     echo json_encode($data);
@@ -50,4 +52,3 @@ function toggle_statut() : void {
     http_response_code(200);
     echo json_encode(['ok' => true]);
 }
-

@@ -8,7 +8,7 @@ require_once __DIR__ . '/BaseModel.php';
 
 class Accounting extends BaseModel implements JsonSerializable
 {
-    public static function create(string $date, string $name, string $url, int $memberId) : Accounting
+    public static function create(string $date, string $name, string $url, int $memberId): Accounting
     {
         $DB = new \DB();
 
@@ -18,7 +18,7 @@ class Accounting extends BaseModel implements JsonSerializable
         return new Accounting($id);
     }
 
-    public function delete() : void
+    public function delete(): void
     {
         $this->DB->query("DELETE FROM COMPTABILITE WHERE id_comptabilite = ?", "i", [$this->id]);
     }
@@ -46,13 +46,13 @@ class Accounting extends BaseModel implements JsonSerializable
         return $data;
     }
 
-    public static function bulkFetch() : array
+    public static function bulkFetch(): array
     {
         $DB = new \DB();
         return $DB->select("SELECT * FROM COMPTABILITE");
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return json_encode($this);
     }

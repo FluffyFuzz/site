@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 use model\Member;
@@ -15,8 +16,8 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 
-tools::checkPermission('p_role');
-tools::checkPermission('p_utilisateur');
+Tools::checkPermission('p_role');
+Tools::checkPermission('p_utilisateur');
 
 
 $methode = $_SERVER['REQUEST_METHOD'];
@@ -45,7 +46,7 @@ switch ($methode) {
 }
 
 
-function get_userRoles() : void
+function get_userRoles(): void
 {
     if (isset($_GET['id'])) {
         // Si un ID est précisé, on renvoie les infos de l'utilisateur correspondant avec ses rôles
@@ -61,18 +62,15 @@ function get_userRoles() : void
 
         http_response_code(200);
         echo json_encode($data->getRoles());
-
-
     } else {
         http_response_code(400);
         echo json_encode(["message" => "Missing id"]);
     }
 }
 
-function setUserRoles() : void
+function setUserRoles(): void
 {
     if (isset($_GET['id'])) {
-
         $id = filter::int($_GET['id']);
 
         $data = Member::getInstance($id);
@@ -100,6 +98,5 @@ function setUserRoles() : void
             http_response_code(400);
             echo json_encode(["message" => "Error while updating roles"]);
         }
-
     }
 }

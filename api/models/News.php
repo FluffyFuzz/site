@@ -1,4 +1,5 @@
 <?php
+
 namespace model;
 
 use JsonSerializable;
@@ -9,8 +10,7 @@ require_once __DIR__ . '/File.php';
 
 class News extends BaseModel implements JsonSerializable
 {
-
-    public static function create(string $nom, string $description, string $date, int $id_membre, File | null $image) : News
+    public static function create(string $nom, string $description, string $date, int $id_membre, File | null $image): News
     {
         $DB = new \DB();
         $imageFileName = $image ? $image->getFileName() : null;
@@ -18,26 +18,26 @@ class News extends BaseModel implements JsonSerializable
         return News::getInstance($id);
     }
 
-    public function update(string $nom, string $description, string $date, int $id_membre) : News
+    public function update(string $nom, string $description, string $date, int $id_membre): News
     {
         $this->DB->query("UPDATE ACTUALITE SET titre_actualite = ?, contenu_actualite = ?, date_actualite = ?, id_membre = ? WHERE id_actualite = ?", "sssii", [$nom, $description, $date, $id_membre, $this->id]);
 
         return $this;
     }
 
-    public function updateImage(File $image) : News
+    public function updateImage(File $image): News
     {
         $this->DB->query("UPDATE ACTUALITE SET image_actualite = ? WHERE id_actualite = ?", "si", [$image->getFileName(), $this->id]);
 
         return $this;
     }
 
-    public function delete() : void
+    public function delete(): void
     {
         $this->DB->query("DELETE FROM ACTUALITE WHERE id_actualite = ?", "i", [$this->id]);
     }
 
-    public static function getInstance(int $id) : News | null
+    public static function getInstance(int $id): News | null
     {
         $DB = new \DB();
         $result = $DB->select("SELECT * FROM ACTUALITE WHERE id_actualite = ?", "i", [$id]);
@@ -49,7 +49,7 @@ class News extends BaseModel implements JsonSerializable
         return new News($id);
     }
 
-    public static function bulkFetch() : array
+    public static function bulkFetch(): array
     {
         $DB = new \DB();
         return $DB->select("SELECT * FROM ACTUALITE");
@@ -63,10 +63,8 @@ class News extends BaseModel implements JsonSerializable
         return $data[0];
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return json_encode($this);
     }
-
-
 }

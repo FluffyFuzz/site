@@ -27,7 +27,7 @@
                 <a href="/grade.php">Grades</a>
             </li>
             
-            <?php if ($isUserLoggedIn): ?>
+            <?php if ($isUserLoggedIn) : ?>
                 <li>
                     <a href="/agenda.php">Agenda</a>
                 </li>
@@ -52,7 +52,7 @@
                 </li>
                 <?php endif; ?>
 
-            <?php else: ?>
+            <?php else : ?>
                 <li>
                     <a href="/login.php">Se connecter</a>
                 </li>

@@ -20,9 +20,9 @@
     $db = new DB();
     $show = 5;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
-        $show = (int) $_GET['show'];
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
+    $show = (int) $_GET['show'];
+}
 ?>
 <h1>ACTUALITES</h1>
 <section>
@@ -30,7 +30,7 @@
     <div class="events-display">
                 <?php
                     $date = getdate();
-                    $sql_date = $date["year"]."-".$date["mon"]."-".$date["mday"];
+                    $sql_date = $date["year"] . "-" . $date["mon"] . "-" . $date["mday"];
                     $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
                     $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
                     $current_date = new DateTime(date("Y-m-d"));
@@ -43,7 +43,7 @@
 
                     $closest_event_id = "";
 
-                    foreach ($events_to_display as $event):
+                    foreach ($events_to_display as $event) :
                         $eventid = $event["id_actualite"];
                         $event_date = substr($event['date_actualite'], 0, 10);
                         $event_date_info = getdate(strtotime($event_date));
@@ -56,10 +56,10 @@
                                 $closest_event_id = "closest-event"; // Marquer le premier événement futur comme le plus proche
                             }
                         }
-                ?>
+                        ?>
                     <div class="event-box"  id="<?php echo $closest_event_id ?>">
                         <div class="timeline-event">
-                            <h4> <?php echo ucwords($joursFr[$event_date_info['wday']]." ".$event_date_info["mday"]." ".$moisFr[$event_date_info['mon']]);?></h4>
+                            <h4> <?php echo ucwords($joursFr[$event_date_info['wday']] . " " . $event_date_info["mday"] . " " . $moisFr[$event_date_info['mon']]);?></h4>
                             <div class="vertical-line"></div>
                         </div>
                         <div class="event" event-id="<?php echo $eventid;?>">
@@ -77,8 +77,8 @@
                             </h4>
                         </div>
                     </div>
-                    <?php $closest_event_id = "";?>
-                <?php endforeach; ?>
+                        <?php $closest_event_id = "";?>
+                    <?php endforeach; ?>
         </div>
 </section>
 

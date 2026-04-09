@@ -20,9 +20,9 @@
     $isLoggedIn = isset($_SESSION["userid"]);
     $show = 5;
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
-        $show = (int) $_GET['show'];
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['show']) && is_numeric($_GET['show'])) {
+    $show = (int) $_GET['show'];
+}
 ?>
 <h1>LES EVENEMENTS</h1>
 <section>
@@ -34,7 +34,7 @@
     <div class="events-display">
                 <?php
                     $date = getdate();
-                    $sql_date = $date["year"]."-".$date["mon"]."-".$date["mday"];
+                    $sql_date = $date["year"] . "-" . $date["mon"] . "-" . $date["mday"];
                     $joursFr = [0 => 'Dimanche', 1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi'];
                     $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
                     $current_date = new DateTime(date("Y-m-d"));
@@ -53,7 +53,7 @@
 
                     $closest_event_id = "";
 
-                    foreach ($events_to_display as $event):
+                    foreach ($events_to_display as $event) :
                         $eventid = $event["id_evenement"];
                         $event_date = substr($event['date_evenement'], 0, 10);
                         $event_date_info = getdate(strtotime($event_date));
@@ -77,10 +77,10 @@
                                 $closest_event_id = "closest-event"; // Marquer le premier événement futur comme le plus proche
                             }
                         }
-                ?>
+                        ?>
                     <div class="event-box <?php echo "$other_classes";?>" id="<?php echo $closest_event_id ?>">
                         <div class="timeline-event">
-                            <h4> <?php echo ucwords($joursFr[$event_date_info['wday']]." ".$event_date_info["mday"]." ".$moisFr[$event_date_info['mon']]);?></h4>
+                            <h4> <?php echo ucwords($joursFr[$event_date_info['wday']] . " " . $event_date_info["mday"] . " " . $moisFr[$event_date_info['mon']]);?></h4>
                             <div class="vertical-line"></div>
                             <p> <?php echo "$date_pin_label";?></p>
                             <div class="timeline-marker <?php echo " $date_pin_class" ?>">
@@ -97,30 +97,31 @@
                                 $isPlaceDisponible = $db->select(
                                     "SELECT (EVENEMENT.places_evenement < 0 OR (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0) AS isPlaceDisponible FROM EVENEMENT WHERE EVENEMENT.id_evenement = ? ;",
                                     "i",
-                                    [$eventid])[0]['isPlaceDisponible'];
-                                
-                                if($isPlaceDisponible){
+                                    [$eventid]
+                                )[0]['isPlaceDisponible'];
+
+                                if ($isPlaceDisponible) {
                                     $event_subscription_color_class = "event-not-subscribed hover_effect";
                                     $event_subscription_label = "S'inscrire";
-                                }else{
+                                } else {
                                     $event_subscription_color_class = "event-full";
                                     $event_subscription_label = "Complet";
                                 }
 
-                                if($isLoggedIn){
+                                if ($isLoggedIn) {
                                     $isSubscribed = !empty($db->select(
-                                    "SELECT MEMBRE.id_membre FROM MEMBRE JOIN INSCRIPTION on MEMBRE.id_membre = INSCRIPTION.id_membre WHERE MEMBRE.id_membre = ? AND INSCRIPTION.id_evenement = ? ;",
-                                    "ii",
-                                    [$_SESSION['userid'], $event["id_evenement"]]
+                                        "SELECT MEMBRE.id_membre FROM MEMBRE JOIN INSCRIPTION on MEMBRE.id_membre = INSCRIPTION.id_membre WHERE MEMBRE.id_membre = ? AND INSCRIPTION.id_evenement = ? ;",
+                                        "ii",
+                                        [$_SESSION['userid'], $event["id_evenement"]]
                                     ));
-                                    
-                                    if($isSubscribed){
+
+                                    if ($isSubscribed) {
                                         $event_subscription_color_class = "event-subscribed";
                                         $event_subscription_label = "Inscrit";
                                     }
                                 }
-                                
-                                if($isPassed){
+
+                                if ($isPassed) {
                                     $event_subscription_color_class = "event-full";
                                     $event_subscription_label = "Passé";
                                 }
@@ -130,8 +131,8 @@
                             </h4>
                         </div>
                     </div>
-                    <?php $closest_event_id = "";?>
-                <?php endforeach; ?>
+                        <?php $closest_event_id = "";?>
+                    <?php endforeach; ?>
         </div>
     <a class="show-more" href="/events.php?show=<?php echo $show + 10?>">Voir plus loin dans le passé</a>
 </section>

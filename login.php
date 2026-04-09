@@ -13,7 +13,7 @@
 
 </head>
     <body>
-        <?php 
+        <?php
             require_once 'header.php';
             require_once 'database.php';
             $db = new DB();
@@ -46,26 +46,33 @@
                 $mail = htmlspecialchars(trim($_POST['mail']));
                 $password = htmlspecialchars(trim($_POST['password']));
 
-                $selection_db = $db->select(
-                    "SELECT id_membre, email_membre, password_membre FROM MEMBRE WHERE email_membre = ?",
-                    "s",
-                    [$mail]
-                );
-                if(!empty($selection_db)){
+            $selection_db = $db->select(
+                "SELECT id_membre, email_membre, password_membre FROM MEMBRE WHERE email_membre = ?",
+                "s",
+                [$mail]
+            );
+            if (!empty($selection_db)) {
+                $db_mail = $selection_db[0]["email_membre"];
 
+<<<<<<< HEAD
                     $db_mail = $selection_db[0]["email_membre"];
                     $db_password = $selection_db[0]["password_membre"];
                     $mail_ok = ($db_mail == $mail);
+=======
+                $db_password = $selection_db[0]["password_membre"];
+>>>>>>> f5a9cdd35425d5a406409e78ced460e74d2c2bf8
 
-                    if($db_password == NULL && $password == ""){
-                        $password_ok = true;
-                    }else{
-                        $password_ok = password_verify($password, $db_password);
-                    }
-                    if($mail_ok && $password_ok){
+                $mail_ok = ($db_mail == $mail);
 
-                        $_SESSION['userid'] = $selection_db[0]["id_membre"];
+                if ($db_password == null && $password == "") {
+                    $password_ok = true;
+                } else {
+                    $password_ok = password_verify($password, $db_password);
+                }
+                if ($mail_ok && $password_ok) {
+                    $_SESSION['userid'] = $selection_db[0]["id_membre"];
 
+<<<<<<< HEAD
                         if($db->select(
                             "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
                             "i",
@@ -81,8 +88,28 @@
                     }
                 }else{
                     echo '<h3 class="login-error">Aucun compte trouvé avec cette adresse email.</h3>';
+=======
+                    //check if perm -> panel admin ok
+                    if (
+                        $db->select(
+                            "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
+                            "i",
+                            [$selection_db[0]["id_membre"]]
+                        )[0]["nb_roles"] > 0
+                    ) {
+                            $_SESSION["isAdmin"] = true;
+                    }
+
+                    header("Location: /index.php");
+                    exit;
+                } else {
+                    echo $login_error;
+>>>>>>> f5a9cdd35425d5a406409e78ced460e74d2c2bf8
                 }
+            } else {
+                echo $login_error;
             }
+        }
         ?>
     </body>
 </html>

@@ -13,14 +13,15 @@
 
 </head>
     <body>
-        <?php 
+        <?php
             require_once 'header.php';
             require_once 'database.php';
             $db = new DB();
 
-            function format_input($text){
-                return htmlspecialchars(trim($text));
-            }
+        function format_input($text)
+        {
+            return htmlspecialchars(trim($text));
+        }
         ?>
 
         <form method="POST" action="" class="login-form">
@@ -48,7 +49,6 @@
         <?php
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
             $mail = htmlspecialchars(trim($_POST['mail']));
 
             $selection_db = $db->select(
@@ -57,8 +57,7 @@
                 [$mail]
             );
 
-            if(empty($selection_db)){
-
+            if (empty($selection_db)) {
                 $password = format_input($_POST['password']);
                 $password_verif = format_input($_POST['password_verif']);
 

@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'DB.php';
 require_once 'tools.php';
@@ -29,7 +30,8 @@ function get_media(): void
     $id_evenement = filter::int($_GET['id_evenement']);
     $media = $DB->select(
         "SELECT id_media, url_media, date_media FROM MEDIA WHERE id_evenement = ? ORDER BY date_media DESC",
-        "i", [$id_evenement]
+        "i",
+        [$id_evenement]
     );
     echo json_encode($media);
 }
