@@ -196,5 +196,13 @@ new_btn.onclick = async ()=>{
 
 };
 
+// Search bar filtering
+document.getElementById('navbar_search').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    for (const li of document.getElementById('content_navbar').children) {
+        li.hidden = !li.textContent.toLowerCase().includes(query);
+    }
+});
+
 // Load navbar
 refreshNavbar(fetchData, selectArticle);

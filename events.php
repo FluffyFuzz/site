@@ -26,7 +26,11 @@
 ?>
 <h1>LES EVENEMENTS</h1>
 <section>
-    <a class="show-more" href="/events.php?show= <?php echo $show + 10?>">Voir plus loin dans le passé</a>
+    <div class="events-filters">
+        <label><input type="checkbox" id="filter-passe" checked> Passés</label>
+        <label><input type="checkbox" id="filter-avenir" checked> À venir</label>
+        <input type="text" id="filter-lieu" placeholder="Filtrer par lieu...">
+    </div>
     <div class="events-display">
                 <?php
                     $date = getdate();
@@ -35,17 +39,17 @@
                     $moisFr = [1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril', 5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août', 9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre'];
                     $current_date = new DateTime(date("Y-m-d"));
 
-                    $events_to_display = $db->select(
+                    $upcoming_events = $db->select(
                         "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement >= ? AND deleted = false ORDER BY date_evenement ASC;",
                         "s",
                         [$sql_date]
                     );
                     $passed_events = $db->select(
-                        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement < ? AND deleted = false ORDER BY date_evenement ASC LIMIT ?;",
+                        "SELECT id_evenement, nom_evenement, lieu_evenement, date_evenement FROM EVENEMENT WHERE date_evenement < ? AND deleted = false ORDER BY date_evenement DESC LIMIT ?;",
                         "si",
                         [$sql_date, $show]
                     );
-                    $events_to_display = array_merge($passed_events, $events_to_display);
+                    $events_to_display = array_merge($upcoming_events, $passed_events);
 
                     $closest_event_id = "";
 
@@ -129,9 +133,37 @@
                     <?php $closest_event_id = "";?>
                 <?php endforeach; ?>
         </div>
+    <a class="show-more" href="/events.php?show=<?php echo $show + 10?>">Voir plus loin dans le passé</a>
 </section>
     <?php require_once 'footer.php';?>
     <script src="/scripts/event_details_redirect.js"></script>
     <script src="/scripts/scroll_to_closest_event.js"></script>
+    <script>
+    (function(){
+        const filterPasse  = document.getElementById('filter-passe');
+        const filterAvenir = document.getElementById('filter-avenir');
+        const filterLieu   = document.getElementById('filter-lieu');
+
+        function applyFilters(){
+            const showPasse  = filterPasse.checked;
+            const showAvenir = filterAvenir.checked;
+            const lieu = filterLieu.value.toLowerCase();
+
+            document.querySelectorAll('.event-box').forEach(box => {
+                const isPassed  = box.classList.contains('passed');
+                const lieuText  = box.querySelector('.event div')?.textContent?.toLowerCase() ?? '';
+
+                const statusOk = (isPassed && showPasse) || (!isPassed && showAvenir);
+                const lieuOk   = lieu === '' || lieuText.includes(lieu);
+
+                box.style.display = (statusOk && lieuOk) ? '' : 'none';
+            });
+        }
+
+        filterPasse.addEventListener('change', applyFilters);
+        filterAvenir.addEventListener('change', applyFilters);
+        filterLieu.addEventListener('input', applyFilters);
+    })();
+    </script>
 </body>
 </html>

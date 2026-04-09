@@ -30,6 +30,7 @@
             <input type="password" name="password">
 
             <button type="submit">Se connecter</button>
+            <a href="/forgot_password.php">Mot de passe oublié ?</a>
         </form>
 
         <form method="GET" action="/signin.php" id="create-account">
@@ -42,7 +43,6 @@
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
-                $login_error = "<h3 class=\"login-error\">Erreur dans les informations de connexion.</h3>";
                 $mail = htmlspecialchars(trim($_POST['mail']));
                 $password = htmlspecialchars(trim($_POST['password']));
 
@@ -54,9 +54,7 @@
                 if(!empty($selection_db)){
 
                     $db_mail = $selection_db[0]["email_membre"];
-                    
                     $db_password = $selection_db[0]["password_membre"];
-        
                     $mail_ok = ($db_mail == $mail);
 
                     if($db_password == NULL && $password == ""){
@@ -68,7 +66,6 @@
 
                         $_SESSION['userid'] = $selection_db[0]["id_membre"];
 
-                        //check if perm -> panel admin ok
                         if($db->select(
                             "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
                             "i",
@@ -80,10 +77,10 @@
                         exit;
 
                     }else{
-                        echo $login_error;
+                        echo '<h3 class="login-error">Mot de passe incorrect.</h3>';
                     }
                 }else{
-                    echo $login_error;
+                    echo '<h3 class="login-error">Aucun compte trouvé avec cette adresse email.</h3>';
                 }
             }
         ?>

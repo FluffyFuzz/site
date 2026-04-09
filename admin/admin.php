@@ -45,6 +45,11 @@ if (!(isset($_SESSION['isAdmin']) && $_SESSION['isAdmin'])){
                 <img src="ressources/panels_icons/chat.svg" alt="Icone du chat">
                 <p>Chat</p>
             </li>
+
+            <li perm="contact">
+                <img src="ressources/panels_icons/ticket.svg" alt="Icone des messages de contact">
+                <p>Contact</p>
+            </li>
             
             <?php
                 if (tools::hasPermission('p_boutique')){

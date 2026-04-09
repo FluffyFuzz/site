@@ -1,5 +1,5 @@
 // Imports
-import { requestGET } from './ajax.js';
+import { requestGET, requestPATCH } from './ajax.js';
 import { getToggleStatus } from './toggle.js';
 
 // DOM Elements
@@ -69,6 +69,23 @@ function loadData(){
         const paiementCell = document.createElement('td');
         paiementCell.textContent = item.mode_paiement;
         row.appendChild(paiementCell);
+
+        // Statut (modifiable uniquement pour les commandes)
+        const statutCell = document.createElement('td');
+        if (item.type_transaction === 'Commande') {
+            const btn = document.createElement('button');
+            btn.textContent = item.recupere == 1 ? '✓ Récupéré' : '✗ En attente';
+            btn.style.cursor = 'pointer';
+            btn.onclick = async () => {
+                await requestPATCH('/purchase.php', { id_commande: item.id_commande });
+                item.recupere = item.recupere == 1 ? 0 : 1;
+                btn.textContent = item.recupere == 1 ? '✓ Récupéré' : '✗ En attente';
+            };
+            statutCell.appendChild(btn);
+        } else {
+            statutCell.textContent = '—';
+        }
+        row.appendChild(statutCell);
 
         tbody.appendChild(row);
     });

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages de contact</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/general.css">
+    <link rel="stylesheet" href="../styles/panels.css">
+    <style>
+        .contact-card { background: var(--background-color-darker); border-radius: 10px; padding: 16px; margin-bottom: 14px; }
+        .contact-card.unread { border-left: 3px solid #0E74CD; }
+        .contact-meta { font-size: .8em; color: #888; margin-bottom: 6px; }
+        .contact-objet { font-weight: 600; margin-bottom: 6px; }
+        .contact-message { white-space: pre-wrap; margin-bottom: 12px; }
+        .contact-reply { display: flex; gap: 8px; align-items: flex-start; }
+        .contact-reply textarea { flex: 1; min-height: 60px; resize: vertical; }
+        .contact-reply button { white-space: nowrap; }
+        .faq-badge { font-size: .75em; color: #4CAF50; margin-left: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Messages de contact</h1>
+    </header>
+
+    <main>
+        <div id="main_content">
+            <div id="contact-list"></div>
+            <p id="contact-empty" hidden>Aucun message reçu.</p>
+        </div>
+    </main>
+
+    <script type="module" src="../scripts/contact.js"></script>
+</body>
+</html>

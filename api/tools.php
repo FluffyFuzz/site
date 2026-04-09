@@ -38,7 +38,7 @@ class tools
         // Vérifie le type MIME avec finfo
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($_FILES['file']['tmp_name']);
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
         if (!in_array($mimeType, $allowedTypes)) {
             return false;
         }

@@ -101,7 +101,7 @@ function addUpdloadButton(){
 
     // Add "upload file" button
     const upload_button = document.createElement('button');
-    upload_button.innerHTML = '<img src="../ressources/download.svg"><p>Upload file</p>';
+    upload_button.innerHTML = '<img src="../ressources/download.svg"><p>Importer un fichier</p>';
     upload_button.className = 'btn-transparent btn-blue upload-button';
     main_content.appendChild(upload_button);
 

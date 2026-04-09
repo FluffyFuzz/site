@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<?php 
+<?php
         require_once 'database.php';
         $db = new DB();
 
@@ -28,7 +26,9 @@
             header("Location: /index.php");
             exit;
         }
-    ?>
+?>
+<!DOCTYPE html>
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">

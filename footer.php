@@ -1,7 +1,8 @@
 <!-- HEADER -->
 <footer>
     <div>
-        <a>Nous contacter</a>
+        <a href="/contact.php">Nous contacter</a>
+        <a href="/faq.php">FAQ</a>
         <a href="/about.php">Nous rejoindre</a>
         <a href="/news.php">Le département</a>
         <a>Mentions légales</a>

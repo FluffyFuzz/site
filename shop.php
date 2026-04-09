@@ -148,10 +148,12 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
         <?php foreach ($products as $product) : ?>
                 <div id="one-product">
                     <div>
-                        <?php if($product['image_article'] == null):?>
+                        <?php if(empty($product['image_article'])):?>
                             <img src="/admin/ressources/default_images/boutique.png" alt="Image de l'article" />
+                        <?php elseif(str_starts_with($product['image_article'], 'http')):?>
+                            <img src="<?= htmlspecialchars($product['image_article']) ?>" alt="Image de l'article" />
                         <?php else:?>
-                            <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
+                            <img src="/api/files/<?= htmlspecialchars($product['image_article']) ?>" alt="Image de l'article" />
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
                             <?= htmlspecialchars($product['nom_article']) ?>
@@ -164,6 +166,9 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
                         </p>
                     </div>
                     <div>
+                        <?php if ((int)$product['stock_article'] >= 0): ?>
+                            <p class="stock-count">Stock : <?= (int)$product['stock_article'] ?></p>
+                        <?php endif; ?>
                         <p id="stock-status">
                             <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0): ?>
                                 <a class="addCart" id="add-to-cart-button" href="/cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">

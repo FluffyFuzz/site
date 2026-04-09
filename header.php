@@ -38,14 +38,18 @@
             </li>
 
             <?php if ($isUserLoggedIn): ?>
+                <?php if ($isAdmin): ?>
+                <li class="header-dropdown">
+                    <span class="header-dropdown-toggle">⚙</span>
+                    <ul class="header-dropdown-menu">
+                        <li><a href="/account.php">Mon compte</a></li>
+                        <li><a href="/admin/admin.php">Panel Admin</a></li>
+                    </ul>
+                </li>
+                <?php else: ?>
                 <li>
                     <a href="/account.php">Mon compte</a>
                 </li>
-
-                <?php if ($isAdmin): ?>
-                  <li>
-                      <a id="header_admin" href="/admin/admin.php">Panel Admin</a>
-                  </li>
                 <?php endif; ?>
 
             <?php else: ?>

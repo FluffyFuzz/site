@@ -64,10 +64,12 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
         <?php foreach ($products as $product) : ?>
                 <div id="one-product">
                     <div>
-                        <?php if($product['image_grade'] == null):?>
+                        <?php if(empty($product['image_grade'])):?>
                             <img src="/admin/ressources/default_images/grade.webp" alt="Image du grade" />
+                        <?php elseif(str_starts_with($product['image_grade'], 'http')):?>
+                            <img src="<?= htmlspecialchars($product['image_grade']) ?>" alt="Image du grade" />
                         <?php else:?>
-                            <img src="/api/files/<?php echo $product['image_grade']; ?>" alt="Image du grade" />
+                            <img src="/api/files/<?= htmlspecialchars($product['image_grade']) ?>" alt="Image du grade" />
                         <?php endif?>
 
                         <h3 title="<?= htmlspecialchars($product['nom_grade']) ?>">

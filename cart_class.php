@@ -5,7 +5,7 @@ class cart {
 
     public function __construct($db){
 
-        if(!isset($_SESSION)){
+        if(session_status() === PHP_SESSION_NONE){
             session_start();
         }
 

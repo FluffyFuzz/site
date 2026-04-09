@@ -86,6 +86,30 @@ require_once "header.php"
 
 
 
+<H2 class='titre_section_apropos'>DEVENIR ADHÉRENT</H2>
+<section id="adhesion">
+    <p>Rejoindre l'ADIIL en tant qu'adhérent vous permet de bénéficier de réductions sur les événements et les articles de la boutique, et de soutenir les activités du bureau.</p>
+    <h3>Conditions pour devenir adhérent</h3>
+    <ul>
+        <li>Être étudiant au département informatique de l'IUT de Laval.</li>
+        <li>Régler la cotisation annuelle correspondant à votre grade.</li>
+        <li>S'inscrire via l'onglet <a href="/grades.php">Grades</a> de votre espace membre.</li>
+    </ul>
+</section>
+
+<H2 class='titre_section_apropos'>REJOINDRE LE BUREAU</H2>
+<section id="bureau-eligibilite">
+    <p>Vous souhaitez vous impliquer davantage dans la vie étudiante ? Le bureau de l'ADIIL recrute chaque année de nouveaux membres motivés.</p>
+    <h3>Conditions d'éligibilité</h3>
+    <ul>
+        <li>Être étudiant au département informatique de l'IUT de Laval.</li>
+        <li>Être à jour de sa cotisation (être adhérent).</li>
+        <li>Se présenter lors de l'Assemblée Générale annuelle ou contacter un membre du bureau actuel.</li>
+        <li>Obtenir la majorité des votes des adhérents présents lors de l'élection.</li>
+    </ul>
+    <p>Pour toute question, n'hésitez pas à nous contacter via la page <a href="/contact.php">Contact</a>.</p>
+</section>
+
 <?php require_once "footer.php" ?>
 
 </body>

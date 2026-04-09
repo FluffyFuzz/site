@@ -238,7 +238,7 @@ if (isset($_SESSION['message'])) {
                 <?php endif?>
             </label>
 
-            <input type="file" id="profilePictureInput" name="file" accept="image/jpeg, image/png, image/webp" style="display: none;" onchange="this.form.submit()">
+            <input type="file" id="profilePictureInput" name="file" accept="image/jpeg, image/png, image/webp, image/gif" style="display: none;" onchange="this.form.submit()">
 
             <button type="button" id="edit-icon" onclick="document.getElementById('profilePictureInput').click()">
                 <img src="/assets/edit_logo.png" alt="Icone éditer la photo de profil" />
@@ -325,17 +325,10 @@ if (isset($_SESSION['message'])) {
 
     <!-- Formulaire permettant à l'utilisateur de modifier son mot de passe-->
     <form method="POST" action="" id="account-editPass-form">
-        <div>
-            <div>
-                <p>Modifier mon mot de passe :</p>
-                <input type="password" id="mdp" name="mdp" placeholder="Mot de passe actuel">
-            </div>
-            <div>
-                <input type="password" id="newMdp" name="newMdp" placeholder="Nouveau mot de passe" required>
-                <input type="password" id="newMdpVerif" name="newMdpVerif" placeholder="Confirmation du nouveau mot de passe" required>
-            </div>
-        </div>
-
+        <p>Modifier mon mot de passe :</p>
+        <input type="password" id="mdp" name="mdp" placeholder="Mot de passe actuel">
+        <input type="password" id="newMdp" name="newMdp" placeholder="Nouveau mot de passe" required>
+        <input type="password" id="newMdpVerif" name="newMdpVerif" placeholder="Confirmation du nouveau mot de passe" required>
         <button type="submit"><img src="/assets/save_logo.png" alt="Logo editer la photo de profil"/></button>
     </form>
 </section>
@@ -349,11 +342,9 @@ if (isset($_SESSION['message'])) {
 
     <div id="buttons-section">
         <!--Discord-->
-        <button type="button">
-            <a href="https://discord.com/login" target="_blank">
-                <img src="/assets/logo_discord.png" alt="Logo de Discord">
-                Associer mon compte à Discord
-            </a>
+        <button type="button" disabled>
+            <img src="/assets/logo_discord.png" alt="Logo de Discord">
+            Associer mon compte à Discord
         </button>
 
         <!--Deconnexion-->

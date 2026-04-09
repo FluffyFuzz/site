@@ -62,27 +62,22 @@
                 $password = format_input($_POST['password']);
                 $password_verif = format_input($_POST['password_verif']);
 
-                if($password == $password_verif){
-                    $fname = "N/A";
-                    $lname = "N/A";
-    
-                    if(isset($_POST['fname'])){
-                        $fname = format_input($_POST['fname']);
-                    }
-                    if(isset($_POST['lname'])){
-                        $lname = format_input($_POST['lname']);
-                    }
+                if($password !== $password_verif){
+                    echo '<p class="login-error">Les mots de passe ne correspondent pas.</p>';
+                } else {
+                    $fname = isset($_POST['fname']) ? format_input($_POST['fname']) : 'N/A';
+                    $lname = isset($_POST['lname']) ? format_input($_POST['lname']) : 'N/A';
 
                     $db->query(
-                        "CALL creationCompte ( ? , ? , ? , ? , ? );",
-                        "sssss",
-                        [$lname,$fname,$mail,password_hash($password, PASSWORD_DEFAULT),'defaultPP.png']
+                        "INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, password_membre, pp_membre) VALUES (?, ?, ?, ?, '')",
+                        "ssss",
+                        [$lname, $fname, $mail, password_hash($password, PASSWORD_DEFAULT)]
                     );
+                    header("Location: /login.php");
+                    exit;
                 }
-                header("Location: /login.php");
-                exit;
             }else{
-                echo 'Utilisateur déjà présent';
+                echo '<p class="login-error">Cette adresse email est déjà utilisée.</p>';
             }
         }
         ?>

@@ -57,5 +57,8 @@ export async function openFileDialog(accept = 'image/*') {
  * @returns {string} The URL of the file.
  */
 export function getFileBucketUrl(filename){
+    if (filename && (filename.startsWith('http://') || filename.startsWith('https://'))) {
+        return filename;
+    }
     return `/api/files/${filename}`;
 }

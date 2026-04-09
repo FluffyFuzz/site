@@ -15,7 +15,7 @@ class Role extends BaseModel implements JsonSerializable
     {
         $DB = new \DB();
 
-        $id = $DB->query("INSERT INTO ROLE (nom_role, p_log, p_boutique, p_reunion, p_utilisateur, p_grade, p_role, p_actualite, p_evenement, p_comptabilite, p_achat, p_moderation)
+        $id = $DB->query("INSERT INTO ROLE (nom_role, p_log_role, p_boutique_role, p_reunion_role, p_utilisateur_role, p_grade_role, p_roles_role, p_actualite_role, p_evenements_role, p_comptabilite_role, p_achats_role, p_moderation_role)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "siiiiiiiiiii", [$name, $p_log, $p_boutique, $p_reunion, $p_utilisateur, $p_grade, $p_role, $p_actualite, $p_evenement, $p_comptabilite, $p_achat, $p_moderation]);
 
         return new Role($id);
@@ -26,7 +26,7 @@ class Role extends BaseModel implements JsonSerializable
                            bool $p_grade, bool $p_role, bool $p_actualite, bool $p_evenement, bool $p_comptabilite,
                            bool $p_achat, bool $p_moderation) : Role
     {
-        $this->DB->query("UPDATE ROLE SET nom_role = ?, p_log = ?, p_boutique = ?, p_reunion = ?, p_utilisateur = ?, p_grade = ?, p_role = ?, p_actualite = ?, p_evenement = ?, p_comptabilite = ?, p_achat = ?, p_moderation = ? WHERE id_role = ?", "siiiiiiiiiiii", [$name, $p_log, $p_boutique, $p_reunion, $p_utilisateur, $p_grade, $p_role, $p_actualite, $p_evenement, $p_comptabilite, $p_achat, $p_moderation, $this->id]);
+        $this->DB->query("UPDATE ROLE SET nom_role = ?, p_log_role = ?, p_boutique_role = ?, p_reunion_role = ?, p_utilisateur_role = ?, p_grade_role = ?, p_roles_role = ?, p_actualite_role = ?, p_evenements_role = ?, p_comptabilite_role = ?, p_achats_role = ?, p_moderation_role = ? WHERE id_role = ?", "siiiiiiiiiiii", [$name, $p_log, $p_boutique, $p_reunion, $p_utilisateur, $p_grade, $p_role, $p_actualite, $p_evenement, $p_comptabilite, $p_achat, $p_moderation, $this->id]);
 
         return $this;
     }
@@ -72,7 +72,20 @@ class Role extends BaseModel implements JsonSerializable
 
     public function toJson() : array
     {
-        $data = $this->DB->select("SELECT * FROM ROLE WHERE id_role = ?", "i", [$this->id]);
+        $data = $this->DB->select(
+            "SELECT id_role, nom_role,
+                p_log_role          AS p_log,
+                p_boutique_role     AS p_boutique,
+                p_reunion_role      AS p_reunion,
+                p_utilisateur_role  AS p_utilisateur,
+                p_grade_role        AS p_grade,
+                p_roles_role        AS p_role,
+                p_actualite_role    AS p_actualite,
+                p_evenements_role   AS p_evenement,
+                p_comptabilite_role AS p_comptabilite,
+                p_achats_role       AS p_achat,
+                p_moderation_role   AS p_moderation
+             FROM ROLE WHERE id_role = ?", "i", [$this->id]);
 
         return $data[0];
     }
@@ -80,7 +93,7 @@ class Role extends BaseModel implements JsonSerializable
     public static function bulkFetch()
     {
         $DB = new \DB();
-        $result = $DB->select("SELECT * FROM ROLE");
+        $result = $DB->select("SELECT id_role, nom_role FROM ROLE");
 
         return $result;
     }

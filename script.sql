@@ -59,6 +59,7 @@ CREATE TABLE ARTICLE(
                         categorie_article VARCHAR(100) NOT NULL DEFAULT 'Non défini',
                         reduction_article BIT NOT NULL DEFAULT 1,
                         prix_article FLOAT NOT NULL CHECK (prix_article >= 0),
+                        deleted BOOLEAN NOT NULL DEFAULT FALSE,
                         PRIMARY KEY(id_article)
 );
 
@@ -87,6 +88,7 @@ CREATE TABLE EVENEMENT(
                           date_evenement DATETIME NOT NULL,
                           image_evenement VARCHAR(500),
                           description_evenement VARCHAR(1000),
+                          deleted BOOLEAN NOT NULL DEFAULT FALSE,
                           PRIMARY KEY(id_evenement)
 );
 
@@ -107,6 +109,7 @@ CREATE TABLE GRADE(
                       prix_grade INT NOT NULL CHECK (prix_grade >= 0),
                       description_grade VARCHAR(500),
                       nom_grade VARCHAR(100) NOT NULL,
+                      deleted BOOLEAN NOT NULL DEFAULT FALSE,
                       PRIMARY KEY(id_grade)
 );
 
@@ -161,6 +164,25 @@ CREATE TABLE ASSIGNATION(
                             FOREIGN KEY(id_role) REFERENCES ROLE(id_role)
 );
 
+CREATE TABLE CONTACT(
+    id_contact      INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    nom_contact     VARCHAR(100) NOT NULL,
+    prenom_contact  VARCHAR(100) NOT NULL,
+    email_contact   VARCHAR(100) NOT NULL,
+    objet_contact   VARCHAR(200) NOT NULL,
+    message_contact TEXT         NOT NULL,
+    date_contact    DATETIME     NOT NULL DEFAULT NOW(),
+    lu_contact      TINYINT(1)   NOT NULL DEFAULT 0,
+    reponse_faq     TEXT         NULL DEFAULT NULL
+);
+
+CREATE TABLE PASSWORD_RESET(
+    token        VARCHAR(64)  NOT NULL PRIMARY KEY,
+    id_membre    INT          NOT NULL,
+    expires_at   DATETIME     NOT NULL,
+    FOREIGN KEY(id_membre) REFERENCES MEMBRE(id_membre) ON DELETE CASCADE
+);
+
 CREATE TABLE INSCRIPTION(
                             id_membre INT ,
                             id_evenement INT,
@@ -189,17 +211,18 @@ INSERT INTO ROLE (nom_role, p_log_role, p_boutique_role, p_reunion_role, p_utili
 ('infos', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- Insertion des membres
+-- Mot de passe par défaut pour tous : "password" (hash bcrypt)
 INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, password_membre, xp_membre, discord_token_membre, pp_membre, tp_membre) VALUES
-('RUFFAULT--RAVENEL', 'Gemino', 'gemino.ruffault@example.com', 'password1', 50, NULL, 'http://files.bdeinfo.fr/fes2fse1f21se.jpg', '11A'),
-('HANNIER', 'Axelle', 'axelle.hannier@example.com', 'password2', 18, NULL, 'http://files.bdeinfo.fr/fesfe43sf.jpg', '12C'),
-('DAUVERGNE', 'Julien', 'julien.dauvergne@example.com', 'password3', 0, 'g4rd64g6rd4g8f4e64h5bv231h5th44g5ht6h87yj8ty6', 'http://files.bdeinfo.fr/gprdgrd5.jpg','31A'),
-('DELAYE', 'Baptiste', 'baptiste.delahay@example.com', 'password4', 0, NULL, 'http://files.bdeinfo.fr/h5th42fth.jpg', '32D'),
-('VIEILLARD', 'Nathalie', 'nathalie.vieillard@example.com', 'password5', 11, NULL, 'http://files.bdeinfo.fr/jygjgy56yjg.jpg', NULL),
-('HAVARD', 'Barnabe', 'barnabe.havard@example.com', 'password6', 0, 'kiuilui4l8iul654hg2g', 'http://files.bdeinfo.fr/fesifo45ht45h.jpg', '11A'),
-('FEVRIER', 'Theo', 'theo.fevrier@example.com', 'password7', 0, NULL, 'http://files.bdeinfo.fr/gr68grg.jpg', NULL),
-('GOUIN', 'Tom', 'tom.gouin@example.com', 'password8', 12, NULL, 'http://files.bdeinfo.fr/fesf4556fe.jpg', NULL),
-('CONGNARD', 'Evann', 'evann.congnard@example.com', 'password9', 0, NULL, 'http://files.bdeinfo.fr/2f1e2sfs.jpg', '31A'),
-('LE COZ', 'Erwan', 'erwan.lecoz@example.com', 'password10', 0, NULL, 'http://files.bdeinfo.fr/fesf45ef6s4fes6.jpg', '31B');
+('RUFFAULT--RAVENEL', 'Gemino', 'gemino.ruffault@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 50, NULL, 'http://files.bdeinfo.fr/fes2fse1f21se.jpg', '11A'),
+('HANNIER', 'Axelle', 'axelle.hannier@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 18, NULL, 'http://files.bdeinfo.fr/fesfe43sf.jpg', '12C'),
+('DAUVERGNE', 'Julien', 'julien.dauvergne@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, 'g4rd64g6rd4g8f4e64h5bv231h5th44g5ht6h87yj8ty6', 'http://files.bdeinfo.fr/gprdgrd5.jpg','31A'),
+('DELAYE', 'Baptiste', 'baptiste.delahay@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, NULL, 'http://files.bdeinfo.fr/h5th42fth.jpg', '32D'),
+('VIEILLARD', 'Nathalie', 'nathalie.vieillard@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 11, NULL, 'http://files.bdeinfo.fr/jygjgy56yjg.jpg', NULL),
+('HAVARD', 'Barnabe', 'barnabe.havard@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, 'kiuilui4l8iul654hg2g', 'http://files.bdeinfo.fr/fesifo45ht45h.jpg', '11A'),
+('FEVRIER', 'Theo', 'theo.fevrier@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, NULL, 'http://files.bdeinfo.fr/gr68grg.jpg', NULL),
+('GOUIN', 'Tom', 'tom.gouin@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 12, NULL, 'http://files.bdeinfo.fr/fesf4556fe.jpg', NULL),
+('CONGNARD', 'Evann', 'evann.congnard@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, NULL, 'http://files.bdeinfo.fr/2f1e2sfs.jpg', '31A'),
+('LE COZ', 'Erwan', 'erwan.lecoz@example.com', '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq', 0, NULL, 'http://files.bdeinfo.fr/fesf45ef6s4fes6.jpg', '31B');
 
 -- Definition des roles
 INSERT INTO ASSIGNATION (id_membre, id_role) VALUES
@@ -211,9 +234,9 @@ INSERT INTO ASSIGNATION (id_membre, id_role) VALUES
 
 -- Ajout des grades
 INSERT INTO GRADE (reduction_grade, image_grade, prix_grade, description_grade, nom_grade) VALUES
-(0, 'http://files.bdeinfo.fr/grade_fer.jpg', 5, 'Un grade de base en fer.', 'Fer'),
-(0, 'http://files.bdeinfo.fr/grade_or.jpg', 10, 'Un grade sup�rieur en or.', 'Or'),
-(10, 'http://files.bdeinfo.fr/grade_diamand.jpg', 13, 'Le grade ultime en diamant.', 'Diamant');
+(0, '/admin/ressources/default_images/grade_iron.png', 5, 'Un grade de base en fer.', 'Fer'),
+(0, '/admin/ressources/default_images/grade_gold.png', 10, 'Un grade supérieur en or.', 'Or'),
+(10, '/admin/ressources/default_images/grade_diamond.png', 13, 'Le grade ultime en diamant.', 'Diamant');
 
 -- Insertion des adh�sions
 INSERT INTO ADHESION (date_adhesion, prix_adhesion, paiement_adhesion, id_membre, id_grade) VALUES
@@ -350,36 +373,41 @@ libelles de données
 Pour une meilleurs lisibilit, on affiches ces achats du plus recent
 au plus lointain*/
 
+DROP VIEW IF EXISTS HISTORIQUE_COMPLET;
 DROP VIEW IF EXISTS HISTORIQUE;
 
 
-CREATE VIEW HISTORIQUE AS
+CREATE VIEW HISTORIQUE_COMPLET AS
 SELECT
+    MEMBRE.id_membre,
     'Commande' AS type_transaction,
     ARTICLE.nom_article AS element,
-	COMMANDE.qte_commande AS quantite,
-    MEMBRE.nom_membre AS nom_utilisateur,
-	MEMBRE.prenom_membre AS prenom_membre,
-	COMMANDE.statut_commande AS recupere,
+    COMMANDE.qte_commande AS quantite,
+    MEMBRE.nom_membre,
+    MEMBRE.prenom_membre AS prenom_membre,
+    COMMANDE.statut_commande AS recupere,
     COMMANDE.date_commande AS date_transaction,
     COMMANDE.paiement_commande AS mode_paiement,
-    COMMANDE.prix_commande AS montant
+    COMMANDE.prix_commande AS montant,
+    COMMANDE.id_commande AS id_commande
 FROM COMMANDE
 INNER JOIN ARTICLE ON ARTICLE.id_article = COMMANDE.id_article
 INNER JOIN MEMBRE ON MEMBRE.id_membre = COMMANDE.id_membre
 
-UNION ALL -- Permet de joindre le resultat de deux reqetes SELECT
+UNION ALL
 
 SELECT
+    MEMBRE.id_membre,
     'Inscription' AS type_transaction,
     EVENEMENT.nom_evenement AS element,
-	1 AS quantite,
-    MEMBRE.nom_membre AS utilisateur,
-	MEMBRE.prenom_membre AS prenom_membre,
-	1 AS recupere,
+    1 AS quantite,
+    MEMBRE.nom_membre,
+    MEMBRE.prenom_membre AS prenom_membre,
+    1 AS recupere,
     INSCRIPTION.date_inscription AS date_transaction,
     INSCRIPTION.paiement_inscription AS mode_paiement,
-    INSCRIPTION.prix_inscription AS montant
+    INSCRIPTION.prix_inscription AS montant,
+    NULL AS id_commande
 FROM INSCRIPTION
 INNER JOIN EVENEMENT ON EVENEMENT.id_evenement = INSCRIPTION.id_evenement
 INNER JOIN MEMBRE ON MEMBRE.id_membre = INSCRIPTION.id_membre
@@ -387,23 +415,23 @@ INNER JOIN MEMBRE ON MEMBRE.id_membre = INSCRIPTION.id_membre
 UNION ALL
 
 SELECT
+    MEMBRE.id_membre,
     'Adhesion' AS type_transaction,
     GRADE.nom_grade AS element,
-	1 AS quantite,
-    MEMBRE.nom_membre AS nom_utilisateur,
-	MEMBRE.prenom_membre AS prenom_membre,
-	1 AS recupere,
+    1 AS quantite,
+    MEMBRE.nom_membre,
+    MEMBRE.prenom_membre AS prenom_membre,
+    1 AS recupere,
     ADHESION.date_adhesion AS date_transaction,
     ADHESION.paiement_adhesion AS mode_paiement,
-    ADHESION.prix_adhesion AS montant
+    ADHESION.prix_adhesion AS montant,
+    NULL AS id_commande
 FROM ADHESION
 INNER JOIN GRADE ON GRADE.id_grade = ADHESION.id_grade
 INNER JOIN MEMBRE ON MEMBRE.id_membre = ADHESION.id_membre;
 
 
 
-/* Test */
-SELECT * FROM HISTORIQUE ORDER BY date_transaction;
 
 
 
@@ -412,28 +440,23 @@ SELECT * FROM HISTORIQUE ORDER BY date_transaction;
 /******************************************************************/
 DROP VIEW IF EXISTS LISTE_PERMISSIONS;
 
-CREATE VIEW LISTE_PERMISSIONS
-AS
-       -- Explications :
-       -- Un LEFT JOIN est utilise pour s'assurer que tous les utilisateurs sont affiches dans la table
-       -- Dans le cadre ou un utilisateur n'a pas de role (= une ligne de NULL), on les remplace par des 0 (= aucune permission).
-       -- Les permissions sont stockees sous forme de BIT, on les transforme en 1 ou 0 sous forme d'entiers
-       -- Ensuite, on prends la plus grande valeur. Si c'est 0, il n'a pas la permission, si c'est 1, il l'a.
-SELECT MEMBRE.id_membre,
-       MAX(CAST(COALESCE(p_log_role, 0) AS INT))          AS 'Acces aux logs',
-       MAX(CAST(COALESCE(p_boutique_role, 0) AS INT)) AS 'Gestion de la boutique',
-       MAX(CAST(COALESCE(p_reunion_role, 0) AS INT))  AS 'Gestion des reunions',
-       MAX(CAST(COALESCE(p_utilisateur_role, 0) AS INT))AS 'Gestion des utilisateurs',
-       MAX(CAST(COALESCE(p_grade_role, 0) AS INT))        AS 'Gestion des grades',
-       MAX(CAST(COALESCE(p_roles_role, 0) AS INT))        AS 'Gestion des roles',
-       MAX(CAST(COALESCE(p_actualite_role, 0) AS INT))    AS 'Gestion des actualites',
-       MAX(CAST(COALESCE(p_evenements_role, 0) AS INT))   AS 'Gestion des evenements',
-       MAX(CAST(COALESCE(p_comptabilite_role, 0) AS INT)) AS 'Gestion de la comptabilite',
-       MAX(CAST(COALESCE(p_achats_role, 0) AS INT))       AS 'Acces aux achats',
-       MAX(CAST(COALESCE(p_moderation_role, 0) AS INT))   AS 'Moderation'
+CREATE VIEW LISTE_PERMISSIONS AS
+SELECT
+    MEMBRE.id_membre,
+    MAX(CAST(COALESCE(p_log_role, 0) AS UNSIGNED))          AS p_log,
+    MAX(CAST(COALESCE(p_boutique_role, 0) AS UNSIGNED))     AS p_boutique,
+    MAX(CAST(COALESCE(p_reunion_role, 0) AS UNSIGNED))      AS p_reunion,
+    MAX(CAST(COALESCE(p_utilisateur_role, 0) AS UNSIGNED))  AS p_utilisateur,
+    MAX(CAST(COALESCE(p_grade_role, 0) AS UNSIGNED))        AS p_grade,
+    MAX(CAST(COALESCE(p_roles_role, 0) AS UNSIGNED))        AS p_role,
+    MAX(CAST(COALESCE(p_actualite_role, 0) AS UNSIGNED))    AS p_actualite,
+    MAX(CAST(COALESCE(p_evenements_role, 0) AS UNSIGNED))   AS p_evenement,
+    MAX(CAST(COALESCE(p_comptabilite_role, 0) AS UNSIGNED)) AS p_comptabilite,
+    MAX(CAST(COALESCE(p_achats_role, 0) AS UNSIGNED))       AS p_achat,
+    MAX(CAST(COALESCE(p_moderation_role, 0) AS UNSIGNED))   AS p_moderation
 FROM MEMBRE
-         LEFT JOIN ASSIGNATION ON MEMBRE.id_membre = ASSIGNATION.id_membre
-         LEFT JOIN ROLE ON ASSIGNATION.id_role = ROLE.id_role
+LEFT JOIN ASSIGNATION ON MEMBRE.id_membre = ASSIGNATION.id_membre
+LEFT JOIN ROLE        ON ASSIGNATION.id_role = ROLE.id_role
 GROUP BY MEMBRE.id_membre;
 
 
@@ -920,60 +943,20 @@ CALL creationCompte('DUPONT', 'jean', 'dupont.jean@example.com', 'hjhrethe2454rr
 SELECT*FROM MEMBRE;
 
 
--- fixs for deployment
-ALTER TABLE EVENEMENT
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
+-- fixs for deployment (idempotent - skipped if column already exists)
+ALTER TABLE EVENEMENT ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE GRADE     ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE ARTICLE   ADD COLUMN IF NOT EXISTS deleted BOOLEAN NOT NULL DEFAULT FALSE;
 
-ALTER TABLE GRADE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
-
-ALTER TABLE ARTICLE
-    ADD COLUMN deleted BOOLEAN NOT NULL DEFAULT FALSE;
-
-
-DROP VIEW IF EXISTS LISTE_PERMISSIONS;
-
-CREATE VIEW LISTE_PERMISSIONS AS
-SELECT 
-    MEMBRE.id_membre,
-
-    MAX(CAST(COALESCE(p_log_role, 0) AS UNSIGNED))          AS p_log,
-    MAX(CAST(COALESCE(p_boutique_role, 0) AS UNSIGNED))     AS p_boutique,
-    MAX(CAST(COALESCE(p_reunion_role, 0) AS UNSIGNED))      AS p_reunion,
-    MAX(CAST(COALESCE(p_utilisateur_role, 0) AS UNSIGNED))  AS p_utilisateur,
-    MAX(CAST(COALESCE(p_grade_role, 0) AS UNSIGNED))        AS p_grade,
-    MAX(CAST(COALESCE(p_roles_role, 0) AS UNSIGNED))        AS p_role,
-    MAX(CAST(COALESCE(p_actualite_role, 0) AS UNSIGNED))    AS p_actualite,
-    MAX(CAST(COALESCE(p_evenements_role, 0) AS UNSIGNED))   AS p_evenement,
-    MAX(CAST(COALESCE(p_comptabilite_role, 0) AS UNSIGNED)) AS p_comptabilite,
-    MAX(CAST(COALESCE(p_achats_role, 0) AS UNSIGNED))       AS p_achat,
-    MAX(CAST(COALESCE(p_moderation_role, 0) AS UNSIGNED))   AS p_moderation
-
-FROM MEMBRE
-LEFT JOIN ASSIGNATION ON MEMBRE.id_membre = ASSIGNATION.id_membre
-LEFT JOIN ROLE        ON ASSIGNATION.id_role = ROLE.id_role
-GROUP BY MEMBRE.id_membre;
 
 UPDATE MEMBRE SET password_membre = '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq';
 
 -- Chat
-CREATE TABLE IF NOT EXISTS CONVERSATION (
-    id_conversation INT AUTO_INCREMENT PRIMARY KEY,
-    type            ENUM('admin','ticket') NOT NULL DEFAULT 'admin',
-    sujet           VARCHAR(200) NOT NULL,
-    date_creation   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    id_membre       INT NULL,
-    FOREIGN KEY (id_membre) REFERENCES MEMBRE(id_membre) ON DELETE SET NULL
-);
-
-CREATE TABLE IF NOT EXISTS MESSAGE (
-    id_message      INT AUTO_INCREMENT PRIMARY KEY,
-    id_conversation INT NOT NULL,
-    id_membre       INT NOT NULL,
-    contenu         VARCHAR(2000) NOT NULL,
-    date_message    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_conversation) REFERENCES CONVERSATION(id_conversation) ON DELETE CASCADE,
+CREATE TABLE IF NOT EXISTS MESSAGE_ADMIN (
+    id_message   INT AUTO_INCREMENT PRIMARY KEY,
+    id_membre    INT NOT NULL,
+    contenu      VARCHAR(2000) NOT NULL,
+    date_message DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_membre) REFERENCES MEMBRE(id_membre) ON DELETE CASCADE
 );
 
-INSERT IGNORE INTO CONVERSATION (id_conversation, type, sujet) VALUES (1, 'admin', 'Chat administrateurs');
