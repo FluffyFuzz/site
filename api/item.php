@@ -8,9 +8,6 @@ require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Item.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
-
 header('Content-Type: application/json');
 
 tools::checkPermission('p_boutique');

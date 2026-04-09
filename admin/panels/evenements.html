@@ -204,7 +204,7 @@
             <div class="propertie">
                 <div>
                     <p>Places disponibles</p>
-                    <p>Places disponibles à la ventre de l'évènement. -1 Signifie illimité.</p>
+                    <p>Places disponibles à la vente de l'évènement. -1 signifie illimité.</p>
                 </div>
                 <div>
                     <input type="number" id="prop_places" placeholder="50" min="-1">
@@ -231,9 +231,18 @@
                 </div>
             </div>
 
+            <!-- GALERIE -->
+            <div id="gallery-section" style="display:none; width:100%;">
+                <hr style="width:100%; border-color: var(--border-color); margin: 5px 0 15px;">
+                <p style="font-size:18px; font-weight:bold; margin-bottom:12px;">Galerie de l'événement</p>
+                <p id="gallery-empty" style="display:none; font-size:14px; color:var(--text-lighter);">Aucun média dans la galerie.</p>
+                <div id="gallery-grid" style="display:flex; flex-wrap:wrap; gap:10px; width:100%;"></div>
+            </div>
+
             <div class="saves-buttons">
                 <button class="btn-transparent btn-blue" id="save_btn"><img src="../ressources/save.svg" alt="Sauvegarde">Sauvegarder</button>
                 <button class="btn-transparent btn-red" id="delete_btn"><img src="../ressources/delete.svg" alt="Supprimer">Supprimer</button>
+                <button class="btn-transparent" id="gallery_btn" style="color: var(--text-lighter);"><img src="../ressources/download.svg" alt="Galerie">Galerie</button>
             </div>
 
         </div>

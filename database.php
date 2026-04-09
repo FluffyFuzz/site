@@ -34,6 +34,9 @@ class DB
         $stmt->execute();
 
         $id = $conn->insert_id;
+        if ($id === 0) {
+            $id = $stmt->affected_rows;
+        }
         $stmt->close();
         $conn->close();
         return $id;

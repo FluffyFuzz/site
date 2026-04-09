@@ -10,9 +10,6 @@ require_once 'DB.php';
 require_once 'tools.php';
 require_once 'models/File.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
-
 header('Content-Type: application/json');
 
 tools::checkPermission('p_actualite');

@@ -112,7 +112,7 @@
 
                     <h4 <?php
                             $isPlaceDisponible = $db->select(
-                                "SELECT (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0 AS isPlaceDisponible FROM EVENEMENT WHERE EVENEMENT.id_evenement = ? ;",
+                                "SELECT (EVENEMENT.places_evenement < 0 OR (EVENEMENT.places_evenement - (SELECT COUNT(*) FROM INSCRIPTION WHERE INSCRIPTION.id_evenement = EVENEMENT.id_evenement)) > 0) AS isPlaceDisponible FROM EVENEMENT WHERE EVENEMENT.id_evenement = ? ;",
                                 "i",
                                 [$eventid])[0]['isPlaceDisponible'];
                             

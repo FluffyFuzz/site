@@ -33,7 +33,7 @@ function saveImage() : string | null
         // Vérifie le type MIME avec finfo
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($_FILES['file']['tmp_name']);
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'];
         if (!in_array($mimeType, $allowedTypes)) {
             return null;
         }

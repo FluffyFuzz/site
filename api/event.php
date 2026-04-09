@@ -8,9 +8,6 @@ require_once 'tools.php';
 require_once 'filter.php';
 require_once 'models/Event.php';
 
-// TODO: Remove this line in production
-ini_set('display_errors', 1);
-
 header('Content-Type: application/json');
 
 tools::checkPermission('p_evenement');
@@ -65,7 +62,7 @@ function get_events() : void
 
 function create_event() : void
 {
-    $event = Event::create("Nouvel événement", "Description de l'événement", 0, 0, false, 0, "Lieu de l'événement", "2021-01-01");
+    $event = Event::create("Nouvel événement", "Description de l'événement", 0, -1, false, 0, "Lieu de l'événement", "2021-01-01");
 
     echo json_encode($event);
 }

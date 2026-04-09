@@ -25,7 +25,7 @@ class File implements JsonSerializable
 
     public static function getFile(string | null $fileName): File | null
     {
-        if (!is_null($fileName) && file_exists('files/' . $fileName)) {
+        if (!is_null($fileName) && $fileName !== '' && file_exists('files/' . $fileName)) {
             return new File($fileName);
         }
 

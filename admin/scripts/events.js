@@ -22,6 +22,10 @@ const prop_reductions = document.getElementById('prop_reductions');
 const save_btn = document.getElementById('save_btn');
 const delete_btn = document.getElementById('delete_btn');
 const new_btn = document.getElementById('new_btn');
+const gallery_btn = document.getElementById('gallery_btn');
+const gallery_section = document.getElementById('gallery-section');
+const gallery_grid = document.getElementById('gallery-grid');
+const gallery_empty = document.getElementById('gallery-empty');
 
 /**
  * Reloads the navigation bar with event items.
@@ -177,12 +181,24 @@ async function selectEvent(id_event, li){
 
     };
 
+    // Reset gallery on event change
+    gallery_section.style.display = 'none';
+    gallery_btn.onclick = () => {
+        const visible = gallery_section.style.display !== 'none';
+        if (visible) {
+            gallery_section.style.display = 'none';
+        } else {
+            gallery_section.style.display = 'block';
+            loadGallery(id_event);
+        }
+    };
+
     // Hide loader
     hideLoader();
 
     // Hide skeleton
     hidePropertieSkeleton();
-    
+
 }
 
 // Handle new event
@@ -201,6 +217,51 @@ new_btn.onclick = async ()=>{
     }
 
 };
+
+// ── Galerie ───────────────────────────────────────────────────────────────────
+
+async function loadGallery(id_event) {
+    gallery_grid.innerHTML = '';
+    gallery_empty.style.display = 'none';
+
+    try {
+        const media = await requestGET(`/media.php?id_evenement=${id_event}`);
+        if (media.length === 0) {
+            gallery_empty.style.display = 'block';
+            return;
+        }
+        media.forEach(item => {
+            const wrapper = document.createElement('div');
+            wrapper.style.cssText = 'position:relative; width:100px; height:100px; flex-shrink:0;';
+
+            const img = document.createElement('img');
+            img.src = item.url_media;
+            img.title = item.url_media;
+            img.style.cssText = 'width:100px; height:100px; object-fit:cover; border-radius:8px; border:1.5px solid var(--border-color);';
+
+            const btn = document.createElement('button');
+            btn.innerHTML = '<img src="../ressources/delete.svg" alt="Supprimer" style="width:18px;height:18px;">';
+            btn.title = 'Supprimer ce média';
+            btn.style.cssText = 'position:absolute; top:4px; right:4px; background:rgba(195,56,56,0.85); border:none; border-radius:6px; padding:3px; cursor:pointer; display:flex; align-items:center; justify-content:center;';
+            btn.onclick = async () => {
+                try {
+                    await requestDELETE(`/media.php?id=${item.id_media}`);
+                    wrapper.remove();
+                    if (gallery_grid.children.length === 0) gallery_empty.style.display = 'block';
+                    toast('Média supprimé.');
+                } catch (error) {
+                    toast(error.message, true);
+                }
+            };
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(btn);
+            gallery_grid.appendChild(wrapper);
+        });
+    } catch (error) {
+        toast('Erreur lors du chargement de la galerie.', true);
+    }
+}
 
 // Load navbar
 refreshNavbar(fetchData, selectEvent);

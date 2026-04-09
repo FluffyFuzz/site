@@ -45,19 +45,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once 'database.php';
     $db = new DB();
     if(isset($_POST["price"], $_POST["eventid"])){
-        $db->query(
+        $inscription_id = $db->query(
             "INSERT INTO `INSCRIPTION` (`id_membre`, `id_evenement`, `date_inscription`, `paiement_inscription`, `prix_inscription`)
             VALUES (?, ?, NOW(), 'WEB', ?);",
             "iid",
             [$userid, $eventid, $_POST["price"]]
         );
-        $xp = $db->select("SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ?", "i", [$eventid])[0]['xp_evenement'];
-        $db->query(
-            "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
-            "ii",
-            [$xp, $userid]
-        );
-        header("Location: /events.php");
+        if ($inscription_id > 0) {
+            $xp = $db->select("SELECT xp_evenement FROM EVENEMENT WHERE id_evenement = ?", "i", [$eventid])[0]['xp_evenement'];
+            $db->query(
+                "UPDATE MEMBRE SET MEMBRE.xp_membre = MEMBRE.xp_membre + ? where MEMBRE.id_membre = ?;",
+                "ii",
+                [$xp, $userid]
+            );
+            header("Location: /events.php");
+        } else {
+            $_SESSION['subscription_error'] = "Inscription impossible : l'événement est complet ou vous êtes déjà inscrit(e).";
+            header("Location: /event_details.php?id=" . (int)$eventid);
+        }
         exit;
     }
     elseif(isset($_POST["eventid"])){
@@ -142,13 +147,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
 
             <h3>Total &nbsp : &nbsp <?= number_format($price, 2, ',', ' ') ?> €</h3>
-            <?php         var_dump($price);
-            var_dump($user_reduction);?>
-                        <h3>Total après réductions &nbsp : &nbsp <?= number_format($price*$user_reduction, 2, ',', ' ') ?> €</h3>
+            <h3>Total après réductions &nbsp : &nbsp <?= number_format($price*$user_reduction, 2, ',', ' ') ?> €</h3>
                    
         </div>
 
-        <div>    
+        <div>
+            <?php if ($price * $user_reduction == 0): ?>
+
+            <h3>Événement gratuit</h3>
+            <form method="POST" action="/event_subscription.php">
+                <input type="hidden" name="eventid" value="<?php echo $eventid; ?>">
+                <input type="hidden" name="price" value="0">
+                <button type="submit" id="finalise-order-button">Confirmer l'inscription</button>
+            </form>
+
+            <?php else: ?>
+
             <h3>Paiement</h3>
 
             <label for="mode_paiement">Mode de Paiement :</label>
@@ -181,10 +195,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="hidden" name="mode_paiement" value="paypal">
 
                     <button type="button" id="paypal-button">Se connecter à PayPal</button><br><br>
-                        
+
                     <button type="submit" id="finalise-order-button">Valider la commande</button>
                 </form>
             </div>
+
+            <?php endif; ?>
         </div>
     </div>
 

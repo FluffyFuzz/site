@@ -66,7 +66,7 @@ class Filter
 
     public static function bool(mixed $value) : bool
     {
-        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
         if ($filtered === null)
         {

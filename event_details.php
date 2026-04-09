@@ -54,6 +54,13 @@
     require_once 'header.php';
     $isLoggedIn = isset($_SESSION["userid"]);
 ?>
+    <?php if (isset($_SESSION['subscription_error'])): ?>
+        <p style="color:#c0392b; background:#fdecea; border:1px solid #c0392b; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
+            <?= htmlspecialchars($_SESSION['subscription_error']) ?>
+        </p>
+        <?php unset($_SESSION['subscription_error']); ?>
+    <?php endif; ?>
+
     <section class="event-details">
         <?php if($event['image_evenement'] == null):?>
             <img src="/admin/ressources/default_images/event.jpg" alt="Image de l'événement">
@@ -76,8 +83,12 @@
             <?php else:
                 @$a = $db->select("SELECT * FROM INSCRIPTION WHERE id_evenement = ? AND id_membre = ?;","ii",[$_GET['id'], $_SESSION['userid']]);
                 $isSubscribed = !empty($a);
-                if($isSubscribed):
-                    echo '<button class="subscription" id="passed_subscription">Inscrit</button>';
+                if($isSubscribed):?>
+                    <form class="subscription" action="/event_unsubscribe.php" method="post">
+                        <input type="hidden" name="eventid" value="<?php echo $eventid ?>">
+                        <button type="submit" id="passed_subscription">Se désinscrire</button>
+                    </form>
+                <?php
                 else:?>
                     <form class="subscription" action="event_subscription.php" method="post">
                         <input type="text" name="eventid" value="<?php echo $eventid?>" hidden>
@@ -118,9 +129,15 @@
                 "ii",
                 [$_SESSION["userid"], $eventid]
             );
-            foreach($medias as $media => $img):?>
-            <img src="/api/files/<?php echo trim($img['url_media']);?>" alt="Image Personelle de l'événement">
-            <?php endforeach;?>
+            foreach($medias as $img):
+                $url = '/api/files/' . trim($img['url_media']);
+                $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+                if (in_array($ext, ['mp4','webm','ogg','mov'])): ?>
+                    <video src="<?= $url ?>" controls style="width:100%; border-radius:8px;"></video>
+                <?php else: ?>
+                    <img src="<?= $url ?>" alt="Image personnelle de l'événement">
+                <?php endif;
+            endforeach;?>
 
             <form id="add-media" action="/add_media.php" method="post" enctype="multipart/form-data">
                 <label for="file-picker">
@@ -129,7 +146,7 @@
                 <input type="hidden" name="eventid" value="<?php echo $eventid?>">
                 <input type="hidden" name="userid" value="<?php echo $_SESSION['userid']?>">
 
-                <input type="file" id="file-picker" name="file" accept="image/jpeg, image/png, image/webp" hidden>
+                <input type="file" id="file-picker" name="file" accept="image/jpeg, image/png, image/webp, video/mp4, video/webm, video/ogg, video/quicktime" hidden>
                 <button type="submit" style="display:none;">Envoyer</button>
             </form>
 

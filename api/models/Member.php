@@ -41,7 +41,10 @@ class Member extends BaseModel implements JsonSerializable
     {
         $DB = new \DB();
 
-        $id = $DB->query("INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, pp_membre, tp_membre) VALUES (?,?,?,?,?)", "sssss", [$nom, $prenom, $email, $pp, $tp]);
+        $password = password_hash(bin2hex(random_bytes(8)), PASSWORD_BCRYPT);
+        $pp_path  = $pp !== null ? $pp->getFileName() : '';
+
+        $id = $DB->query("INSERT INTO MEMBRE (nom_membre, prenom_membre, email_membre, password_membre, pp_membre, tp_membre) VALUES (?,?,?,?,?,?)", "ssssss", [$nom, $prenom, $email, $password, $pp_path, $tp]);
 
         return new Member($id);
     }

@@ -36,17 +36,17 @@ CREATE TABLE MEMBRE(
 CREATE TABLE ROLE(
                      id_role INT AUTO_INCREMENT,
                      nom_role VARCHAR(100) NOT NULL,
-                     p_log_role BIT NOT NULL,
-                     p_boutique_role BIT NOT NULL,
-                     p_reunion_role BIT NOT NULL,
-                     p_utilisateur_role BIT NOT NULL,
-                     p_grade_role BIT NOT NULL,
-                     p_roles_role BIT NOT NULL,
-                     p_actualite_role BIT NOT NULL,
-                     p_evenements_role BIT NOT NULL,
-                     p_comptabilite_role BIT NOT NULL,
-                     p_achats_role BIT NOT NULL,
-                     p_moderation_role BIT NOT NULL,
+                     p_log_role TINYINT(1) NOT NULL,
+                     p_boutique_role TINYINT(1) NOT NULL,
+                     p_reunion_role TINYINT(1) NOT NULL,
+                     p_utilisateur_role TINYINT(1) NOT NULL,
+                     p_grade_role TINYINT(1) NOT NULL,
+                     p_roles_role TINYINT(1) NOT NULL,
+                     p_actualite_role TINYINT(1) NOT NULL,
+                     p_evenements_role TINYINT(1) NOT NULL,
+                     p_comptabilite_role TINYINT(1) NOT NULL,
+                     p_achats_role TINYINT(1) NOT NULL,
+                     p_moderation_role TINYINT(1) NOT NULL,
                      PRIMARY KEY(id_role)
 );
 
@@ -554,7 +554,7 @@ CREATE TRIGGER permissions_create_event AFTER INSERT ON ACTUALITE FOR EACH ROW
 		DECLARE _user_id INT;
 		DECLARE _has_perms INT;
 		SET _user_id = NEW.id_membre;
-		SET _has_perms = (SELECT `Gestion des actualites` FROM LISTE_PERMISSIONS WHERE id_membre = _user_id);
+		SET _has_perms = (SELECT p_actualite FROM LISTE_PERMISSIONS WHERE id_membre = _user_id);
 
 		IF (_has_perms = 0) THEN
 			-- ROLLBACK TRANSACTION n'existe pas en MySQL, on utilise donc une erreur pour annuler l'insertion
@@ -768,22 +768,27 @@ DELIMITER $$
 CREATE TRIGGER verif_places_eventb AFTER INSERT ON INSCRIPTION FOR EACH ROW
 BEGIN
     DECLARE _id_evenement_inscription INT;
+    DECLARE _places_max INT;
     DECLARE _places_restantes INT;
 
     SET _id_evenement_inscription = NEW.id_evenement;
 
-    -- Calcul des places restantes
-    SET _places_restantes = (
-        SELECT EVENEMENT.places_evenement - COUNT(*)
-        FROM EVENEMENT
-                 JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
-        WHERE EVENEMENT.id_evenement = _id_evenement_inscription
-        GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
-    );
+    SELECT places_evenement INTO _places_max
+    FROM EVENEMENT WHERE id_evenement = _id_evenement_inscription;
 
-    IF _places_restantes <= 0 THEN
-        -- ROLLBACK TRANSACTION n'existe pas sur MySQL, on utilise donc une erreur pour annuler l'insertion
-        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+    -- valeur négative (-1) = illimité, on ne vérifie pas
+    IF _places_max >= 0 THEN
+        SET _places_restantes = (
+            SELECT EVENEMENT.places_evenement - COUNT(*)
+            FROM EVENEMENT
+                     JOIN INSCRIPTION ON INSCRIPTION.id_evenement = EVENEMENT.id_evenement
+            WHERE EVENEMENT.id_evenement = _id_evenement_inscription
+            GROUP BY EVENEMENT.id_evenement, EVENEMENT.places_evenement
+        );
+
+        IF _places_restantes <= 0 THEN
+            SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Il n''y a plus de places disponibles pour cet evenement';
+        END IF;
     END IF;
 END$$
 
@@ -950,3 +955,25 @@ LEFT JOIN ROLE        ON ASSIGNATION.id_role = ROLE.id_role
 GROUP BY MEMBRE.id_membre;
 
 UPDATE MEMBRE SET password_membre = '$2y$10$4ZyDaDMApbY0w8RBahD6m.CPxJ/5Gaqojoql/6XPwnzN0fkg1R4zq';
+
+-- Chat
+CREATE TABLE IF NOT EXISTS CONVERSATION (
+    id_conversation INT AUTO_INCREMENT PRIMARY KEY,
+    type            ENUM('admin','ticket') NOT NULL DEFAULT 'admin',
+    sujet           VARCHAR(200) NOT NULL,
+    date_creation   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_membre       INT NULL,
+    FOREIGN KEY (id_membre) REFERENCES MEMBRE(id_membre) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS MESSAGE (
+    id_message      INT AUTO_INCREMENT PRIMARY KEY,
+    id_conversation INT NOT NULL,
+    id_membre       INT NOT NULL,
+    contenu         VARCHAR(2000) NOT NULL,
+    date_message    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_conversation) REFERENCES CONVERSATION(id_conversation) ON DELETE CASCADE,
+    FOREIGN KEY (id_membre) REFERENCES MEMBRE(id_membre) ON DELETE CASCADE
+);
+
+INSERT IGNORE INTO CONVERSATION (id_conversation, type, sujet) VALUES (1, 'admin', 'Chat administrateurs');
