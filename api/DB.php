@@ -1,7 +1,5 @@
 <?php
 
-namespace api;
-
 class DB
 {
     private $host = 'db';

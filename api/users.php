@@ -1,8 +1,6 @@
 <?php
 
 session_start();
-use model\File;
-use model\Member;
 
 require_once 'models/Member.php';
 require_once 'models/File.php';

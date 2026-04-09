@@ -1,8 +1,6 @@
 <?php
 
-namespace model;
 
-use JsonSerializable;
 
 require_once __DIR__ . '/BaseModel.php';
 require_once __DIR__ . '/Member.php';
@@ -12,7 +10,7 @@ class News extends BaseModel implements JsonSerializable
 {
     public static function create(string $nom, string $description, string $date, int $id_membre, File | null $image): News
     {
-        $DB = new \DB();
+        $DB = new DB();
         $imageFileName = $image ? $image->getFileName() : null;
         $id = $DB->query("INSERT INTO ACTUALITE (titre_actualite, contenu_actualite, date_actualite, id_membre, image_actualite) VALUES (?, ?, ?, ?, ?)", "sssis", [$nom, $description, $date, $id_membre, $imageFileName]);
         return News::getInstance($id);
@@ -39,7 +37,7 @@ class News extends BaseModel implements JsonSerializable
 
     public static function getInstance(int $id): News | null
     {
-        $DB = new \DB();
+        $DB = new DB();
         $result = $DB->select("SELECT * FROM ACTUALITE WHERE id_actualite = ?", "i", [$id]);
 
         if (count($result) == 0) {
@@ -51,7 +49,7 @@ class News extends BaseModel implements JsonSerializable
 
     public static function bulkFetch(): array
     {
-        $DB = new \DB();
+        $DB = new DB();
         return $DB->select("SELECT * FROM ACTUALITE");
     }
 

@@ -1,7 +1,5 @@
 <?php
 
-namespace root;
-
 class DB
 {
     private $host = 'db';

@@ -1,8 +1,6 @@
 <?php
 
 session_start();
-use model\Event;
-use model\File;
 
 require_once 'DB.php';
 require_once 'tools.php';

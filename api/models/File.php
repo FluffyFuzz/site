@@ -1,12 +1,8 @@
 <?php
 
-namespace model;
 
 require_once __DIR__ . '/BaseModel.php';
 
-use finfo;
-use JsonSerializable;
-use tools;
 
 class File implements JsonSerializable
 {

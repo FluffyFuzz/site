@@ -1,10 +1,6 @@
 <?php
 
-namespace model;
 
-use Filter;
-use model\Role;
-use JsonSerializable;
 
 require_once __DIR__ . '/BaseModel.php';
 require_once __DIR__ . '/Role.php';
@@ -40,7 +36,7 @@ class Member extends BaseModel implements JsonSerializable
 
     public static function create(string $nom, string $prenom, string $email, File | null $pp, string $tp): Member
     {
-        $DB = new \DB();
+        $DB = new DB();
 
         $password = password_hash(bin2hex(random_bytes(8)), PASSWORD_BCRYPT);
         $pp_path  = $pp !== null ? $pp->getFileName() : '';
@@ -60,7 +56,7 @@ class Member extends BaseModel implements JsonSerializable
 
     public static function getInstance($id): ?Member
     {
-        $DB = new \DB();
+        $DB = new DB();
         $result = $DB->select("SELECT * FROM MEMBRE WHERE id_membre = ?", "i", [$id]);
 
         if (count($result) == 0) {
@@ -104,7 +100,7 @@ class Member extends BaseModel implements JsonSerializable
         // Les roles ne sont pas inclus non plus.
         // Il faut utiliser la méthode fetch() pour obtenir l'objet membre, ainsi que les roles
 
-        $DB = new \DB();
+        $DB = new DB();
         $result = $DB->select("SELECT * FROM MEMBRE");
 
         return $result;

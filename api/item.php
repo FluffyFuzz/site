@@ -1,8 +1,6 @@
 <?php
 
 session_start();
-use model\File;
-use model\Item;
 
 require_once 'DB.php';
 require_once 'tools.php';

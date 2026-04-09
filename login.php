@@ -54,14 +54,7 @@
             if (!empty($selection_db)) {
                 $db_mail = $selection_db[0]["email_membre"];
 
-<<<<<<< HEAD
-                    $db_mail = $selection_db[0]["email_membre"];
-                    $db_password = $selection_db[0]["password_membre"];
-                    $mail_ok = ($db_mail == $mail);
-=======
                 $db_password = $selection_db[0]["password_membre"];
->>>>>>> f5a9cdd35425d5a406409e78ced460e74d2c2bf8
-
                 $mail_ok = ($db_mail == $mail);
 
                 if ($db_password == null && $password == "") {
@@ -72,42 +65,22 @@
                 if ($mail_ok && $password_ok) {
                     $_SESSION['userid'] = $selection_db[0]["id_membre"];
 
-<<<<<<< HEAD
-                        if($db->select(
-                            "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
-                            "i",
-                            [$selection_db[0]["id_membre"]])[0]["nb_roles"] > 0){
-                                $_SESSION["isAdmin"] = true;
-                            }
-
-                        header("Location: /index.php");
-                        exit;
-
-                    }else{
-                        echo '<h3 class="login-error">Mot de passe incorrect.</h3>';
-                    }
-                }else{
-                    echo '<h3 class="login-error">Aucun compte trouvé avec cette adresse email.</h3>';
-=======
-                    //check if perm -> panel admin ok
-                    if (
-                        $db->select(
-                            "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
-                            "i",
-                            [$selection_db[0]["id_membre"]]
-                        )[0]["nb_roles"] > 0
-                    ) {
-                            $_SESSION["isAdmin"] = true;
+                    if ($db->select(
+                        "SELECT COUNT(*) as nb_roles FROM ASSIGNATION WHERE id_membre = ? ;",
+                        "i",
+                        [$selection_db[0]["id_membre"]]
+                    )[0]["nb_roles"] > 0) {
+                        $_SESSION["isAdmin"] = true;
                     }
 
                     header("Location: /index.php");
                     exit;
+
                 } else {
-                    echo $login_error;
->>>>>>> f5a9cdd35425d5a406409e78ced460e74d2c2bf8
+                    echo '<h3 class="login-error">Mot de passe incorrect.</h3>';
                 }
             } else {
-                echo $login_error;
+                echo '<h3 class="login-error">Aucun compte trouvé avec cette adresse email.</h3>';
             }
         }
         ?>

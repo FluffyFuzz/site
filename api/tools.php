@@ -1,7 +1,5 @@
 <?php
 
-namespace api;
-
 require_once 'DB.php';
 
 class Tools
@@ -94,7 +92,7 @@ class Tools
             return false;
         }
 
-        $db = new \DB();
+        $db = new DB();
         $perms = $db->select("SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = ?", 'i', [$_SESSION['userid']]);
 
         if (count($perms) == 0 || !isset($perms[0][$permission]) || $perms[0][$permission] == 0) {

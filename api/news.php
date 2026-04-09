@@ -1,9 +1,6 @@
 <?php
 
 session_start();
-use model\File;
-use model\News;
-use model\Role;
 
 require_once 'filter.php';
 require_once 'models/News.php';

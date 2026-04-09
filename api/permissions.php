@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 if (isset($_SESSION['userid'])) {
-    $db = new \DB();
+    $db = new DB();
 
     $results = $db->select("SELECT * FROM LISTE_PERMISSIONS WHERE id_membre = ?", 'i', [$_SESSION['userid']]);
 

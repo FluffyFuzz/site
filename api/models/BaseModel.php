@@ -1,11 +1,10 @@
 <?php
 
-namespace model;
 
 class BaseModel
 {
     protected int $id;
-    protected \DB $DB;
+    protected DB $DB;
 
 
     public function getId(): int
@@ -16,6 +15,6 @@ class BaseModel
     protected function __construct($id)
     {
         $this->id = $id;
-        $this->DB = new \DB();
+        $this->DB = new DB();
     }
 }

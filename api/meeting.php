@@ -1,9 +1,6 @@
 <?php
 
 session_start();
-use model\File;
-use model\Meeting;
-use model\Member;
 
 require_once 'filter.php';
 require_once 'models/File.php';

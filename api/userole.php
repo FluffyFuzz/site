@@ -2,7 +2,6 @@
 
 session_start();
 
-use model\Member;
 
 require_once 'filter.php';
 require_once 'models/Role.php';

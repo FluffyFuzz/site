@@ -1,7 +1,5 @@
 <?php
 
-namespace api;
-
 session_start();
 
 require_once 'tools.php';

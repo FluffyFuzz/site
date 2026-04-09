@@ -210,7 +210,7 @@ function unescapeICS(string $s): string
  */
 function getSiteEvents(int $userId): array
 {
-    $db   = new \DB();
+    $db   = new DB();
     $rows = $db->select(
         "SELECT E.nom_evenement, E.lieu_evenement, E.date_evenement, E.description_evenement
          FROM EVENEMENT E

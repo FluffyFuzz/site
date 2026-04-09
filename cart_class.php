@@ -1,7 +1,5 @@
 <?php
 
-namespace root;
-
 class Cart
 {
     private $db;
