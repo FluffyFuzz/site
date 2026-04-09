@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
-<?php 
+<?php
         require_once 'database.php';
         $db = new DB();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
-            $eventid = $_GET['id'];
-            $event = $db->select(
-                "SELECT *
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $eventid = $_GET['id'];
+    $event = $db->select(
+        "SELECT *
                 FROM ACTUALITE WHERE id_actualite = ?",
-                "i",
-                [$eventid]
-            );
-            if(empty($event) || is_null($event)){
-                header("Location: /index.php");
-                exit;
-            }
-            $event = $event[0];
-        }else{
-            header("Location: /index.php");
-            exit;
-        }
-    ?>
+        "i",
+        [$eventid]
+    );
+    if (empty($event) || is_null($event)) {
+        header("Location: /index.php");
+        exit;
+    }
+    $event = $event[0];
+} else {
+    header("Location: /index.php");
+    exit;
+}
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -46,11 +46,11 @@
     <?php
     require_once 'header.php';
     $isLoggedIn = isset($_SESSION["userid"]);
-?>
+    ?>
     <section class="event-details">
-        <?php if($event['image_actualite'] == null):?>
+        <?php if ($event['image_actualite'] == null) :?>
             <img src="/admin/ressources/default_images/event.jpg" alt="Image de l'actualite">
-        <?php else:?>
+        <?php else :?>
             <img src="/api/files/<?php echo $event['image_actualite']; ?>" alt="Image de l'actualite">
         <?php endif?>
         <h1><?php echo strtoupper($event['titre_actualite']); ?></h1>

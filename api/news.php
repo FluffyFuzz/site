@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\File;
 use model\News;
@@ -12,7 +13,7 @@ require_once 'models/File.php';
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_actualite');
+Tools::checkPermission('p_actualite');
 
 $DB = new DB();
 
@@ -26,7 +27,7 @@ switch ($methode) {
         create_news();
         break;
     case 'PUT':                     # UPDATE (données)
-        if (tools::methodAccepted('application/json')) {
+        if (Tools::methodAccepted('application/json')) {
             update_news();
         }
         break;
@@ -46,7 +47,7 @@ switch ($methode) {
 
 
 
-function get_news() : void
+function get_news(): void
 {
     if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
@@ -58,20 +59,19 @@ function get_news() : void
             return;
         }
         echo $news;
-
     } else {
         $news = News::bulkFetch();
         echo json_encode($news);
     }
 }
 
-function create_news() : void
+function create_news(): void
 {
     $news = News::create("Nouvel article", "Description de l'article", "2021-01-01", $_SESSION['userid'], null);
     echo $news;
 }
 
-function update_news() : void
+function update_news(): void
 {
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
@@ -93,7 +93,7 @@ function update_news() : void
     echo $news;
 }
 
-function update_image() : void
+function update_image(): void
 {
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
@@ -117,7 +117,7 @@ function update_image() : void
 }
 
 
-function delete_news() : void
+function delete_news(): void
 {
     $id = filter::int($_GET['id']);
     $news = News::getInstance($id);
@@ -132,4 +132,3 @@ function delete_news() : void
     http_response_code(200);
     echo json_encode(['message' => 'News deleted']);
 }
-

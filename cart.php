@@ -32,7 +32,7 @@
 <!------PHP------>
 <!--------------->
 
-<?php 
+<?php
 
 // Importer les fichiers
 require_once "header.php" ;
@@ -44,27 +44,26 @@ require_once 'cart_class.php';
 $db = new DB();
 
 // Initialisation du panier
-$cart = new cart($db);
+$cart = new Cart($db);
 ?>
 
 <!-- On récupère les produits du panier -->
 <?php
     $ids = array_keys($_SESSION['cart']);
-    if(empty($ids)){
-        $products = array();
-    }
-    else {
-        //Préparation de la requete SELECT
-        $placeholders = implode(",", array_fill(0, count($ids), "?"));
-        $query = "SELECT * FROM ARTICLE WHERE id_article IN ($placeholders)";
-        $types = str_repeat("i", count($ids));
-        
-        $products = $db->select(
-            $query, 
-            $types, 
-            $ids
-        );
-    }
+if (empty($ids)) {
+    $products = array();
+} else {
+    //Préparation de la requete SELECT
+    $placeholders = implode(",", array_fill(0, count($ids), "?"));
+    $query = "SELECT * FROM ARTICLE WHERE id_article IN ($placeholders)";
+    $types = str_repeat("i", count($ids));
+
+    $products = $db->select(
+        $query,
+        $types,
+        $ids
+    );
+}
 ?>
 
 <!--------------->
@@ -77,12 +76,12 @@ $cart = new cart($db);
     <!-- Affichage du message de succès ou d'erreur -->
     <div>
         <?php
-            if (isset($_SESSION['message'])) {
-                $messageStyle = isset($_SESSION['message_type']) && $_SESSION['message_type'] === "error" ? "error-message" : "success-message";
-                echo '<div id="' . $messageStyle . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
-                unset($_SESSION['message']); // Supprimer le message après affichage
-                unset($_SESSION['message_type']); // Supprimer le type après affichage
-            }
+        if (isset($_SESSION['message'])) {
+            $messageStyle = isset($_SESSION['message_type']) && $_SESSION['message_type'] === "error" ? "error-message" : "success-message";
+            echo '<div id="' . $messageStyle . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
+            unset($_SESSION['message']); // Supprimer le message après affichage
+            unset($_SESSION['message_type']); // Supprimer le type après affichage
+        }
         ?>
     </div>
 

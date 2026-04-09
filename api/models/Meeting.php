@@ -9,14 +9,13 @@ require_once __DIR__ . '/Member.php';
 
 class Meeting extends BaseModel implements JsonSerializable
 {
-
-    public function delete() : void
+    public function delete(): void
     {
         $this->getFile()?->deleteFile();
         $this->DB->query("DELETE FROM REUNION WHERE id_reunion = ?", "i", [$this->id]);
     }
 
-    public function getFile() : File | null
+    public function getFile(): File | null
     {
         $data = $this->DB->select("SELECT fichier_reunion
                                  FROM REUNION
@@ -25,7 +24,7 @@ class Meeting extends BaseModel implements JsonSerializable
         return File::getFile($data['fichier_reunion']);
     }
 
-    public function getUser() : Member
+    public function getUser(): Member
     {
         $data = $this->DB->select("SELECT id_membre
                                  FROM REUNION
@@ -34,7 +33,7 @@ class Meeting extends BaseModel implements JsonSerializable
         return new Member($data['id_membre']);
     }
 
-    public static function create(string $date, File $file, Member $member) : Meeting
+    public static function create(string $date, File $file, Member $member): Meeting
     {
         $DB = new \DB();
 
@@ -68,15 +67,14 @@ class Meeting extends BaseModel implements JsonSerializable
         return $data;
     }
 
-    public static function bulkFetch() : array
+    public static function bulkFetch(): array
     {
         $DB = new \DB();
         return $DB->select("SELECT * FROM REUNION");
     }
 
-    public function __toString() : string
+    public function __toString(): string
     {
         return json_encode($this);
     }
-
 }

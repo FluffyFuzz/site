@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
-<?php 
+<?php
         require_once 'database.php';
         $db = new DB();
 
         $show = 8;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
-            $eventid = $_GET['id'];
-            $event = $db->select(
-                "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`, `image_evenement`, `description_evenement`
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
+    $eventid = $_GET['id'];
+    $event = $db->select(
+        "SELECT `nom_evenement`, `xp_evenement`, `places_evenement`, `prix_evenement`, `reductions_evenement`, `lieu_evenement`, `date_evenement`, `image_evenement`, `description_evenement`
                 FROM EVENEMENT WHERE id_evenement = ?",
-                "i",
-                [$eventid]
-            );
-            if(empty($event) || is_null($event)){
-                header("Location: /index.php");
-                exit;
-            }
-            $event = $event[0];
+        "i",
+        [$eventid]
+    );
+    if (empty($event) || is_null($event)) {
+        header("Location: /index.php");
+        exit;
+    }
+    $event = $event[0];
 
-            if (isset($_GET['show']) && is_numeric($_GET['show']) && $_GET['show']) {
-                $show = (int) $_GET['show'];
-            }
-
-        }else{
-            header("Location: /index.php");
-            exit;
-        }
-    ?>
+    if (isset($_GET['show']) && is_numeric($_GET['show']) && $_GET['show']) {
+        $show = (int) $_GET['show'];
+    }
+} else {
+    header("Location: /index.php");
+    exit;
+}
+?>
 
 <head>
     <meta charset="UTF-8">
@@ -62,9 +61,9 @@
     <?php endif; ?>
 
     <section class="event-details">
-        <?php if($event['image_evenement'] == null):?>
+        <?php if ($event['image_evenement'] == null) :?>
             <img src="/admin/ressources/default_images/event.jpg" alt="Image de l'événement">
-        <?php else:?>
+        <?php else :?>
             <img src="/api/files/<?php echo $event['image_evenement']; ?>" alt="Image de l'événement">
         <?php endif?>
 
@@ -78,10 +77,10 @@
                     echo date('d/m/Y', strtotime($event['date_evenement']));
                 ?>
             </h2>
-            <?php if($event_date < $current_date):?>
+            <?php if ($event_date < $current_date) :?>
                 <button class="subscription" id="passed_subscription">Passé</button>
-            <?php else:
-                @$a = $db->select("SELECT * FROM INSCRIPTION WHERE id_evenement = ? AND id_membre = ?;","ii",[$_GET['id'], $_SESSION['userid']]);
+            <?php else :
+                @$a = $db->select("SELECT * FROM INSCRIPTION WHERE id_evenement = ? AND id_membre = ?;", "ii", [$_GET['id'], $_SESSION['userid']]);
                 $isSubscribed = !empty($a);
                 if($isSubscribed):?>
                     <form class="subscription" action="/event_unsubscribe.php" method="post">
@@ -107,7 +106,9 @@
                 <div>💸<h3><?php echo $event['prix_evenement']; ?>€ par personne</h3>
                 </div>
             </li>
-            <?php if(boolval($event['reductions_evenement'])){echo "<li><div>💎<h3>-10% pour les membres Diamants</h3></div></li>";} ?>
+            <?php if (boolval($event['reductions_evenement'])) {
+                echo "<li><div>💎<h3>-10% pour les membres Diamants</h3></div></li>";
+            } ?>
         </ul>
 
         <p>
@@ -119,8 +120,7 @@
 
     <section class="gallery">
         <h2>GALLERIE</h2>
-        <?php if($isLoggedIn):?>
-
+        <?php if ($isLoggedIn) :?>
         <h3>Mes photos</h3>
         <div class="my-medias">
             <?php
@@ -171,9 +171,9 @@
                 "ii",
                 [$eventid, $show]
             );
-            foreach($medias as $media => $img):?>
+foreach ($medias as $media => $img) :?>
             <img src="/api/files/<?php echo trim($img['url_media']);?>" alt="Image de l'événement">
-            <?php endforeach;?>
+<?php endforeach;?>
 
 
         </div>
@@ -187,7 +187,7 @@
 
             <form action="" method="GET" style="display: inline;">
                 <input type="hidden" name="id" value="<?php echo $eventid?>">
-                <?php if($show >= 20): ?>
+                <?php if ($show >= 20) : ?>
                 <input type="hidden" name="show" value="<?php echo $show - 10?>">
                 <?php endif;?>
                 <button type="submit">Voir Moins</button>

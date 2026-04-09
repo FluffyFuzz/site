@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\File;
 use model\Grade;
@@ -14,7 +15,7 @@ ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_grade');
+Tools::checkPermission('p_grade');
 
 $methode = $_SERVER['REQUEST_METHOD'];
 
@@ -27,7 +28,7 @@ switch ($methode) {
         create_grade();
         break;
     case 'PUT':                      # UPDATE (données seulement)
-        if (tools::methodAccepted('application/json')) {
+        if (Tools::methodAccepted('application/json')) {
             update_grade();
         }
         break;
@@ -45,10 +46,9 @@ switch ($methode) {
 }
 
 
-function get_grades() : void
+function get_grades(): void
 {
-    if (isset($_GET['id']))
-    {
+    if (isset($_GET['id'])) {
         $id = filter::int($_GET['id']);
         $grades = Grade::getInstance($id);
 
@@ -57,16 +57,14 @@ function get_grades() : void
             echo json_encode(['error' => 'Grade not found']);
             return;
         }
-        
     } else {
         $grades = Grade::bulkFetch();
     }
 
     echo json_encode($grades);
-
 }
 
-function create_grade() : void
+function create_grade(): void
 {
     $grade = Grade::create("Nouveau grade", "Ceci est un nouveau grade", 10.99, null, 0);
 
@@ -74,7 +72,7 @@ function create_grade() : void
     echo $grade;
 }
 
-function update_grade() : void
+function update_grade(): void
 {
     if (!isset($_GET['id'])) {
         http_response_code(400);
@@ -90,7 +88,6 @@ function update_grade() : void
         echo json_encode(['error' => 'Incomplete data']);
         return;
     }
-    
     $id = filter::int($_GET['id']);
     $name = filter::string($data['name'], maxLenght: 100);
     $description = filter::string($data['description'], maxLenght: 500);
@@ -112,7 +109,7 @@ function update_grade() : void
 }
 
 
-function update_image() : void
+function update_image(): void
 {
     if (!isset($_GET['id'])) {
         http_response_code(400);
@@ -140,10 +137,9 @@ function update_image() : void
     $grade->updateImage($image);
 
     echo json_encode($grade);
-
 }
 
-function delete_grade() : void
+function delete_grade(): void
 {
     if (!isset($_GET['id'])) {
         http_response_code(400);
@@ -165,4 +161,3 @@ function delete_grade() : void
     http_response_code(200);
     echo json_encode(['message' => 'Grade deleted']);
 }
-

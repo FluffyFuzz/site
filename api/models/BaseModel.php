@@ -4,7 +4,6 @@ namespace model;
 
 class BaseModel
 {
-
     protected int $id;
     protected \DB $DB;
 
@@ -19,5 +18,4 @@ class BaseModel
         $this->id = $id;
         $this->DB = new \DB();
     }
-
 }

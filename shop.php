@@ -25,7 +25,7 @@
 <!--------------->
 
 <!-- Importer les fichiers -->
-<?php 
+<?php
 require_once "header.php" ;
 require_once 'database.php';
 require_once 'files_save.php';
@@ -35,7 +35,7 @@ require_once 'cart_class.php';
 $db = new DB();
 
 // Initialisation du panier
-$cart = new cart($db);
+$cart = new Cart($db);
 
 
 // Gestion de la recherche, des filtres et tris
@@ -148,9 +148,9 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
         <?php foreach ($products as $product) : ?>
                 <div id="one-product">
                     <div>
-                        <?php if($product['image_article'] == null):?>
+                        <?php if ($product['image_article'] == null) :?>
                             <img src="/admin/ressources/default_images/boutique.png" alt="Image de l'article" />
-                        <?php else:?>
+                        <?php else :?>
                             <img src="/api/files/<?php echo $product['image_article']; ?>" alt="Image de l'article" />
                         <?php endif?>
                         <h3 title="<?= htmlspecialchars($product['nom_article']) ?>">
@@ -158,18 +158,18 @@ $products = $db->select($query, str_repeat("s", count($params)), $params);
                         </h3>
                         <p><?= number_format(htmlspecialchars($product['prix_article']), 2, ',', ' ') ?> € </p>
                         <p><?= htmlspecialchars($product['xp_article']) ?> XP
-                            <?php if (!(int)$product['reduction_article']){ ?>
+                            <?php if (!(int)$product['reduction_article']) { ?>
                             <span>    * </span>
                             <?php } ?>
                         </p>
                     </div>
                     <div>
                         <p id="stock-status">
-                            <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0): ?>
+                            <?php if ((int)$product['stock_article'] > 0 || (int)$product['stock_article'] < 0) : ?>
                                 <a class="addCart" id="add-to-cart-button" href="/cart_add.php?id=<?= htmlspecialchars($product['id_article']) ?>">
                                     Ajouter au panier
                                 </a>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <button id="out-of-stock">Épuisé</button>
                             <?php endif; ?>
                         </p>

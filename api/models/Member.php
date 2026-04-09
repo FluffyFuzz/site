@@ -1,4 +1,5 @@
 <?php
+
 namespace model;
 
 use Filter;
@@ -11,7 +12,7 @@ require_once __DIR__ . '/Role.php';
 
 class Member extends BaseModel implements JsonSerializable
 {
-    public function delete() : void
+    public function delete(): void
     {
         $this->getProfilePic()?->deleteFile();
 
@@ -23,21 +24,21 @@ class Member extends BaseModel implements JsonSerializable
     }
 
     // TODO: Create an Image type ($pp)
-    public function update(string $nom, string $prenom, string $email, string $tp, int $xp) : Member
+    public function update(string $nom, string $prenom, string $email, string $tp, int $xp): Member
     {
         $this->DB->query("UPDATE MEMBRE SET nom_membre = ?, prenom_membre = ?, email_membre = ?, tp_membre = ?, xp_membre = ? WHERE id_membre = ?", "ssssii", [$nom, $prenom, $email, $tp, $xp, $this->id]);
 
         return $this;
     }
 
-    public function updateProfilePic(File $pp) : Member
+    public function updateProfilePic(File $pp): Member
     {
         $this->DB->query("UPDATE MEMBRE SET pp_membre = ? WHERE id_membre = ?", "si", [$pp->getFileName(), $this->id]);
 
         return $this;
     }
 
-    public static function create(string $nom, string $prenom, string $email, File | null $pp, string $tp) : Member
+    public static function create(string $nom, string $prenom, string $email, File | null $pp, string $tp): Member
     {
         $DB = new \DB();
 
@@ -57,7 +58,7 @@ class Member extends BaseModel implements JsonSerializable
         return $result[0];
     }
 
-    public static function getInstance($id) : ?Member
+    public static function getInstance($id): ?Member
     {
         $DB = new \DB();
         $result = $DB->select("SELECT * FROM MEMBRE WHERE id_membre = ?", "i", [$id]);
@@ -126,7 +127,7 @@ class Member extends BaseModel implements JsonSerializable
         return $roles;
     }
 
-    public function toJsonWithRoles() : array
+    public function toJsonWithRoles(): array
     {
         $data =  $this->toJson();
 
@@ -151,6 +152,3 @@ class Member extends BaseModel implements JsonSerializable
         return $this->toJsonWithRoles();
     }
 }
-
-
-

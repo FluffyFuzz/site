@@ -1,4 +1,4 @@
-<!-- HEADER -->
+<!-- FOOTER -->
 <footer>
     <div>
         <a>Nous contacter</a>

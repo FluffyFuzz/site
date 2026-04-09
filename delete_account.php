@@ -13,15 +13,14 @@
 <body>
     
 
-<?php 
+<?php
 session_start();
 
 require_once 'database.php';
 $db = new DB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    if (isset($_POST['delete_account']) && $_POST['delete_account'] === 'true'):?>
+    if (isset($_POST['delete_account']) && $_POST['delete_account'] === 'true') :?>
                 <div id="deleteAccountAlert" class="alert-container">
                     <div class="alert-content">
                         <p>
@@ -42,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </ul>
                     </div>
                 </div>
-<?php 
+        <?php
     endif;
 
-    if (isset($_POST['delete_account_valid']) && $_POST['delete_account_valid'] === 'true'){
+    if (isset($_POST['delete_account_valid']) && $_POST['delete_account_valid'] === 'true') {
         $db->query(
             "CALL suppressionCompte ( ? );",
             "i",

@@ -25,7 +25,7 @@
 <!--------------->
 
 <!-- Importer les fichiers -->
-<?php 
+<?php
 require_once "header.php" ;
 require_once 'database.php';
 require_once 'files_save.php';
@@ -50,12 +50,12 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
 <!-- Affichage du message de succès ou d'erreur -->
 <div>
     <?php
-        if (isset($_SESSION['message'])) {
-            $messageStyle = isset($_SESSION['message_type']) && $_SESSION['message_type'] === "error" ? "error-message" : "success-message";
-            echo '<div id="' . $messageStyle . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
-            unset($_SESSION['message']); // Supprimer le message après affichage
-            unset($_SESSION['message_type']); // Supprimer le type après affichage
-        }
+    if (isset($_SESSION['message'])) {
+        $messageStyle = isset($_SESSION['message_type']) && $_SESSION['message_type'] === "error" ? "error-message" : "success-message";
+        echo '<div id="' . $messageStyle . '">' . htmlspecialchars($_SESSION['message']) . '</div>';
+        unset($_SESSION['message']); // Supprimer le message après affichage
+        unset($_SESSION['message_type']); // Supprimer le type après affichage
+    }
     ?>
 </div>
 
@@ -64,9 +64,9 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
         <?php foreach ($products as $product) : ?>
                 <div id="one-product">
                     <div>
-                        <?php if($product['image_grade'] == null):?>
+                        <?php if ($product['image_grade'] == null) :?>
                             <img src="/admin/ressources/default_images/grade.webp" alt="Image du grade" />
-                        <?php else:?>
+                        <?php else :?>
                             <img src="/api/files/<?php echo $product['image_grade']; ?>" alt="Image du grade" />
                         <?php endif?>
 
@@ -83,15 +83,16 @@ $products = $db->select("SELECT * FROM GRADE WHERE deleted = false ORDER BY prix
 
                             <?php
                             if (!empty($_SESSION['userid'])) {
-                                $unAdherant = $db->select("SELECT * FROM GRADE INNER JOIN ADHESION ON GRADE.id_grade = ADHESION.id_grade INNER JOIN MEMBRE ON ADHESION.id_membre = MEMBRE.id_membre WHERE GRADE.id_grade = ? AND MEMBRE.id_membre = ?;",
-                                "ii",
-                                [$product['id_grade'], $_SESSION['userid']]
+                                $unAdherant = $db->select(
+                                    "SELECT * FROM GRADE INNER JOIN ADHESION ON GRADE.id_grade = ADHESION.id_grade INNER JOIN MEMBRE ON ADHESION.id_membre = MEMBRE.id_membre WHERE GRADE.id_grade = ? AND MEMBRE.id_membre = ?;",
+                                    "ii",
+                                    [$product['id_grade'], $_SESSION['userid']]
                                 );
                                 ?>
                             <?php } ?>
-                            <?php if (!empty($_SESSION) && !empty($unAdherant)): ?>
+                            <?php if (!empty($_SESSION) && !empty($unAdherant)) : ?>
                                 <button id="detention">Vous détenez ce grade</button>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <a id="buy-button" href="/grade_subscription.php?id=<?= htmlspecialchars($product['id_grade']) ?>">
                                     Acheter
                                 </a>

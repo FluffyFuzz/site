@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 use model\Role;
 
@@ -13,7 +14,7 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 
-tools::checkPermission('p_role');
+Tools::checkPermission('p_role');
 
 
 $methode = $_SERVER['REQUEST_METHOD'];
@@ -27,7 +28,7 @@ switch ($methode) {
             create_role();
         break;
     case 'PUT':
-        if (tools::methodAccepted('application/json')) {
+        if (Tools::methodAccepted('application/json')) {
             update_role();
         }
         break;
@@ -41,7 +42,7 @@ switch ($methode) {
         break;
 }
 
-function get_role() : void
+function get_role(): void
 {
     if (isset($_GET['id'])) {
         // Si un ID est précisé, on renvoie les infos de l'utilisateur correspondant avec ses rôles
@@ -54,7 +55,6 @@ function get_role() : void
             echo json_encode(["message" => "User not found"]);
             return;
         }
-
     } else {
         // Sinon, on renvoie la liste de tous les utilisateurs. On va juste préciser si ils ont des rôles ou non
         $data = Role::bulkFetch();
@@ -72,7 +72,7 @@ function create_role(): void
     echo json_encode($role);
 }
 
-function update_role() : void
+function update_role(): void
 {
     $data = json_decode(file_get_contents('php://input'), true);
 
@@ -108,11 +108,9 @@ function update_role() : void
 
     http_response_code(200);
     echo json_encode($role);
-
-
 }
 
-function delete_role() : void
+function delete_role(): void
 {
     if (!isset($_GET['id'])) {
         http_response_code(400);
@@ -135,4 +133,3 @@ function delete_role() : void
     http_response_code(200);
     echo json_encode(['message' => 'Role deleted']);
 }
-

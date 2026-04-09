@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once 'DB.php';
@@ -10,7 +11,7 @@ ini_set('display_errors', 1);
 
 header('Content-Type: application/json');
 
-tools::checkPermission('p_achat');
+Tools::checkPermission('p_achat');
 
 $DB = new DB();
 
@@ -26,11 +27,11 @@ switch ($methode) {
         break;
 }
 
-function get_purchase() : void {
+function get_purchase(): void
+{
     $db = new DB();
 
     $data = $db->select("SELECT H.*, M.nom_membre, M.prenom_membre FROM HISTORIQUE_COMPLET as H INNER JOIN MEMBRE M on H.id_membre = M.id_membre");
 
     echo json_encode(array_reverse($data));
 }
-

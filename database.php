@@ -1,5 +1,7 @@
 <?php
 
+namespace root;
+
 class DB
 {
     private $host = 'db';
@@ -26,8 +28,7 @@ class DB
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
 
@@ -47,8 +48,7 @@ class DB
         $conn = $this->connect();
 
         $stmt = $conn->prepare($sql);
-        if (!empty($types))
-        {
+        if (!empty($types)) {
             $stmt->bind_param($types, ...$args);
         }
         $stmt->execute();
@@ -66,4 +66,3 @@ class DB
         return htmlspecialchars($input);
     }
 }
-?>
