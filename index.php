@@ -30,7 +30,7 @@
         <section>
             <h2 class="titre_vertical"> ADIIL</h2>
             <div id="index_carrousel">
-                <img src="/assets/photo_accueil_BDE.png" alt="Carrousel ADIIL">
+                <img src="/assets/photo_accueil_BDE.webp" alt="Carrousel ADIIL">
             </div>
         </section>
 
